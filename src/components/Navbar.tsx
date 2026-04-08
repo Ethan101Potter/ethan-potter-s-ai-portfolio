@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Menu, X, Github, Linkedin } from "lucide-react";
+import { Menu, X, Github, Linkedin, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
 
 const links = [
   { label: "About", href: "#about" },
