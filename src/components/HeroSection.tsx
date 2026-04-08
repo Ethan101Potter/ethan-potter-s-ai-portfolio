@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Download } from "lucide-react";
 
 const HeroSection = () => {
   return (
@@ -48,13 +48,21 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.45 }}
-          className="flex gap-4 justify-center"
+          className="flex flex-wrap gap-4 justify-center"
         >
           <a
             href="#experience"
             className="inline-flex items-center gap-2 px-8 py-3 rounded-lg bg-primary text-primary-foreground font-display text-sm font-medium tracking-wide hover:opacity-90 transition-opacity"
           >
             View My Work
+          </a>
+          <a
+            href="/Ethan_Potter_Resume.pdf"
+            download
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-lg border border-primary/50 text-primary font-display text-sm font-medium tracking-wide hover:bg-primary/10 transition-colors"
+          >
+            <Download className="w-4 h-4" />
+            Download CV
           </a>
           <a
             href="#contact"
