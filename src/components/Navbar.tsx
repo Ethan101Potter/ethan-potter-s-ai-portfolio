@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Github, Linkedin } from "lucide-react";
 
 const links = [
   { label: "About", href: "#about" },
@@ -38,6 +38,14 @@ const Navbar = () => {
               {l.label}
             </a>
           ))}
+          <div className="flex items-center gap-3 ml-2 border-l border-border pl-4">
+            <a href="https://github.com/ethanpotter" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <Github className="w-4 h-4" />
+            </a>
+            <a href="https://linkedin.com/in/ethanpotter" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <Linkedin className="w-4 h-4" />
+            </a>
+          </div>
         </div>
 
         {/* Mobile toggle */}
@@ -66,6 +74,14 @@ const Navbar = () => {
               {l.label}
             </a>
           ))}
+          <div className="flex items-center gap-4 pt-2 border-t border-border/50">
+            <a href="https://github.com/ethanpotter" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <Github className="w-4 h-4" />
+            </a>
+            <a href="https://linkedin.com/in/ethanpotter" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <Linkedin className="w-4 h-4" />
+            </a>
+          </div>
         </motion.div>
       )}
     </motion.nav>
