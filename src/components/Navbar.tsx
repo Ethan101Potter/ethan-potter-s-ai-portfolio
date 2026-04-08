@@ -14,6 +14,7 @@ const links = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { theme, toggle } = useTheme();
 
   return (
     <motion.nav
@@ -46,6 +47,9 @@ const Navbar = () => {
             <a href="https://linkedin.com/in/ethanpotter" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
               <Linkedin className="w-4 h-4" />
             </a>
+            <button onClick={toggle} className="text-muted-foreground hover:text-primary transition-colors" aria-label="Toggle theme">
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
           </div>
         </div>
 
