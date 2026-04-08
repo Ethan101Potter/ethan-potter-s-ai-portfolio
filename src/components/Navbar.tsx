@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Menu, X, Github, Linkedin } from "lucide-react";
+import { Menu, X, Github, Linkedin, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
 
 const links = [
   { label: "About", href: "#about" },
@@ -13,6 +14,7 @@ const links = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { theme, toggle } = useTheme();
 
   return (
     <motion.nav
@@ -45,6 +47,9 @@ const Navbar = () => {
             <a href="https://linkedin.com/in/ethanpotter" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
               <Linkedin className="w-4 h-4" />
             </a>
+            <button onClick={toggle} className="text-muted-foreground hover:text-primary transition-colors" aria-label="Toggle theme">
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
           </div>
         </div>
 
@@ -81,6 +86,9 @@ const Navbar = () => {
             <a href="https://linkedin.com/in/ethanpotter" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
               <Linkedin className="w-4 h-4" />
             </a>
+            <button onClick={toggle} className="text-muted-foreground hover:text-primary transition-colors" aria-label="Toggle theme">
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
           </div>
         </motion.div>
       )}
