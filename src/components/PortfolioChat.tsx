@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { MessageCircle, X, Send, Bot, User, Sparkles, ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/hooks/use-theme";
 
 /* ── Knowledge base ─────────────────────────────────────────── */
 type QA = { q: string; a: string; tags: string[] };
@@ -140,6 +141,9 @@ let msgId = 0;
 
 /* ── Chat panel ── */
 const ChatPanel = ({ onClose }: { onClose: () => void }) => {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   const [msgs, setMsgs] = useState<Msg[]>([
     {
       role: "bot",
@@ -164,7 +168,6 @@ const ChatPanel = ({ onClose }: { onClose: () => void }) => {
     setMsgs(prev => [...prev, userMsg]);
     setInput("");
     setTyping(true);
-    // Simulate thinking delay
     setTimeout(() => {
       const answer = findAnswer(text);
       setTyping(false);
@@ -176,6 +179,26 @@ const ChatPanel = ({ onClose }: { onClose: () => void }) => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(input); }
   };
 
+  // Theme-aware color tokens
+  const panelBg    = isDark ? "linear-gradient(160deg, hsl(220 22% 10%) 0%, hsl(220 22% 7%) 100%)"
+                            : "linear-gradient(160deg, hsl(0 0% 100%) 0%, hsl(210 25% 97%) 100%)";
+  const panelShadow= isDark ? "0 32px 80px -16px hsl(220 30% 1% / 0.8), 0 0 0 1px hsl(var(--primary) / 0.12), inset 0 1px 0 hsl(255 100% 100% / 0.06)"
+                            : "0 16px 60px -12px hsl(220 20% 60% / 0.25), 0 0 0 1px hsl(var(--primary) / 0.15)";
+  const headerBg   = isDark ? "hsl(var(--primary) / 0.06)" : "hsl(var(--primary) / 0.05)";
+  const botBubbleBg= isDark ? "hsl(220 22% 13%)" : "hsl(210 25% 95%)";
+  const botBubbleBd= isDark ? "1px solid hsl(220 14% 20%)" : "1px solid hsl(210 20% 86%)";
+  const botBubbleFg= isDark ? "hsl(210 20% 92%)" : "hsl(220 25% 12%)";
+  const userBubbleBg= isDark ? "linear-gradient(135deg, hsl(var(--primary) / 0.18), hsl(var(--accent) / 0.12))"
+                             : "linear-gradient(135deg, hsl(var(--primary) / 0.14), hsl(var(--accent) / 0.08))";
+  const userBubbleBd= isDark ? "1px solid hsl(var(--primary) / 0.2)" : "1px solid hsl(var(--primary) / 0.25)";
+  const userBubbleFg= isDark ? "hsl(210 20% 92%)" : "hsl(220 25% 10%)";
+  const typingBg   = isDark ? "hsl(220 22% 13%)" : "hsl(210 25% 95%)";
+  const typingBd   = isDark ? "1px solid hsl(220 14% 20%)" : "1px solid hsl(210 20% 86%)";
+  const suggBg     = isDark ? "hsl(220 22% 11%)" : "hsl(210 20% 94%)";
+  const inputAreaBg= isDark ? "hsl(220 22% 8%)" : "hsl(210 20% 96%)";
+  const sendDisabledBg = isDark ? "hsl(220 14% 16%)" : "hsl(210 20% 88%)";
+  const sendDisabledFg = isDark ? "hsl(215 12% 40%)" : "hsl(215 12% 55%)";
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.92, y: 20, originX: 1, originY: 1 }}
@@ -184,14 +207,14 @@ const ChatPanel = ({ onClose }: { onClose: () => void }) => {
       transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
       className="fixed bottom-24 right-6 z-[200] w-[360px] max-w-[calc(100vw-24px)] rounded-2xl border border-border overflow-hidden flex flex-col"
       style={{
-        background: "linear-gradient(160deg, hsl(220 22% 10%) 0%, hsl(220 22% 7%) 100%)",
-        boxShadow: "0 32px 80px -16px hsl(220 30% 1% / 0.8), 0 0 0 1px hsl(var(--primary) / 0.12), inset 0 1px 0 hsl(255 100% 100% / 0.06)",
+        background: panelBg,
+        boxShadow: panelShadow,
         maxHeight: "min(560px, calc(100vh - 120px))",
       }}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border/60"
-        style={{ background: "hsl(var(--primary) / 0.06)" }}>
+        style={{ background: headerBg }}>
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl flex items-center justify-center"
             style={{ background: "linear-gradient(135deg, hsl(var(--primary) / 0.2), hsl(var(--accent) / 0.15))", boxShadow: "0 0 16px hsl(var(--primary) / 0.2)" }}>
@@ -200,13 +223,13 @@ const ChatPanel = ({ onClose }: { onClose: () => void }) => {
           <div>
             <p className="font-ui text-xs font-bold text-foreground leading-tight">Ethan's AI Assistant</p>
             <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
               <span className="font-body text-[9px] text-muted-foreground font-light">Online · Powered by portfolio knowledge</span>
             </div>
           </div>
         </div>
         <motion.button onClick={onClose} whileHover={{ scale: 1.1, rotate: 90 }} whileTap={{ scale: 0.9 }}
-          className="w-7 h-7 rounded-full border border-border/60 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+          className="w-7 h-7 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
           <X className="w-3.5 h-3.5" />
         </motion.button>
       </div>
@@ -222,24 +245,23 @@ const ChatPanel = ({ onClose }: { onClose: () => void }) => {
             className={`flex gap-2.5 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
             {/* Avatar */}
             <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-              msg.role === "bot"
-                ? "bg-primary/15 border border-primary/20"
-                : "bg-accent/15 border border-accent/20"
+              msg.role === "bot" ? "bg-primary/15 border border-primary/20" : "bg-accent/15 border border-accent/20"
             }`}>
               {msg.role === "bot"
                 ? <Bot className="w-3 h-3 text-primary" />
                 : <User className="w-3 h-3 text-accent" />}
             </div>
             {/* Bubble */}
-            <div className={`max-w-[82%] px-3.5 py-2.5 rounded-2xl font-body text-[12px] leading-[1.7] font-light space-y-0.5 ${
-              msg.role === "bot"
-                ? "rounded-tl-sm text-foreground/90"
-                : "rounded-tr-sm text-foreground/90"
-            }`}
-              style={msg.role === "bot"
-                ? { background: "hsl(220 22% 13%)", border: "1px solid hsl(220 14% 20%)" }
-                : { background: "linear-gradient(135deg, hsl(var(--primary) / 0.18), hsl(var(--accent) / 0.12))", border: "1px solid hsl(var(--primary) / 0.2)" }
-              }>
+            <div
+              className={`max-w-[82%] px-3.5 py-2.5 rounded-2xl font-body text-[12px] leading-[1.7] font-light space-y-0.5 ${
+                msg.role === "bot" ? "rounded-tl-sm" : "rounded-tr-sm"
+              }`}
+              style={{
+                background: msg.role === "bot" ? botBubbleBg : userBubbleBg,
+                border: msg.role === "bot" ? botBubbleBd : userBubbleBd,
+                color: msg.role === "bot" ? botBubbleFg : userBubbleFg,
+              }}
+            >
               {renderText(msg.text)}
             </div>
           </motion.div>
@@ -253,7 +275,7 @@ const ChatPanel = ({ onClose }: { onClose: () => void }) => {
               <Bot className="w-3 h-3 text-primary" />
             </div>
             <div className="px-3.5 py-2.5 rounded-2xl rounded-tl-sm flex gap-1 items-center"
-              style={{ background: "hsl(220 22% 13%)", border: "1px solid hsl(220 14% 20%)" }}>
+              style={{ background: typingBg, border: typingBd }}>
               {[0, 1, 2].map(i => (
                 <motion.div key={i} className="w-1.5 h-1.5 rounded-full bg-primary/60"
                   animate={{ y: [0, -4, 0] }}
@@ -274,8 +296,8 @@ const ChatPanel = ({ onClose }: { onClose: () => void }) => {
               {SUGGESTIONS.map(s => (
                 <motion.button key={s} onClick={() => send(s)}
                   whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className="font-ui text-[10px] font-medium px-2.5 py-1 rounded-full border border-border/60 text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors duration-150"
-                  style={{ background: "hsl(220 22% 11%)" }}>
+                  className="font-ui text-[10px] font-medium px-2.5 py-1 rounded-full border border-border text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors duration-150"
+                  style={{ background: suggBg }}>
                   {s}
                 </motion.button>
               ))}
@@ -287,8 +309,8 @@ const ChatPanel = ({ onClose }: { onClose: () => void }) => {
       </div>
 
       {/* Input */}
-      <div className="px-3 py-3 border-t border-border/60"
-        style={{ background: "hsl(220 22% 8%)" }}>
+      <div className="px-3 py-3 border-t border-border"
+        style={{ background: inputAreaBg }}>
         <div className="flex gap-2 items-center">
           <input
             ref={inputRef}
@@ -296,7 +318,7 @@ const ChatPanel = ({ onClose }: { onClose: () => void }) => {
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKey}
             placeholder="Ask me anything…"
-            className="flex-1 bg-transparent font-body text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none py-1.5 px-1"
+            className="flex-1 bg-transparent font-body text-[12px] text-foreground placeholder:text-muted-foreground/60 focus:outline-none py-1.5 px-1"
           />
           <motion.button
             onClick={() => send(input)}
@@ -307,10 +329,11 @@ const ChatPanel = ({ onClose }: { onClose: () => void }) => {
             style={{
               background: input.trim()
                 ? "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))"
-                : "hsl(220 14% 16%)",
+                : sendDisabledBg,
               boxShadow: input.trim() ? "0 0 16px hsl(var(--primary) / 0.35)" : "none",
             }}>
-            <Send className="w-3.5 h-3.5 text-background" style={{ color: input.trim() ? "hsl(220 20% 4%)" : "hsl(215 12% 40%)" }} />
+            <Send className="w-3.5 h-3.5"
+              style={{ color: input.trim() ? "hsl(220 20% 4%)" : sendDisabledFg }} />
           </motion.button>
         </div>
       </div>
@@ -322,9 +345,17 @@ const ChatPanel = ({ onClose }: { onClose: () => void }) => {
 const PortfolioChat = () => {
   const [open, setOpen] = useState(false);
   const [pulse, setPulse] = useState(true);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
-  // Stop pulsing after first open
   const handleOpen = () => { setOpen(true); setPulse(false); };
+
+  const fabClosedBg  = isDark ? "linear-gradient(135deg, hsl(220 22% 14%), hsl(220 22% 10%))"
+                               : "linear-gradient(135deg, hsl(210 20% 94%), hsl(210 20% 90%))";
+  const fabClosedShadow = isDark ? "0 8px 32px hsl(220 30% 1% / 0.6), 0 0 0 1px hsl(var(--border))"
+                                 : "0 4px 20px hsl(220 20% 60% / 0.2), 0 0 0 1px hsl(var(--border))";
+  const tooltipBg = isDark ? "hsl(220 22% 10%)" : "hsl(0 0% 100%)";
+  const tooltipShadow = isDark ? "0 8px 24px hsl(220 30% 1% / 0.5)" : "0 4px 20px hsl(220 20% 60% / 0.2)";
 
   return (
     <>
@@ -337,12 +368,8 @@ const PortfolioChat = () => {
         whileTap={{ scale: 0.93 }}
         className="fixed bottom-6 right-6 z-[200] w-14 h-14 rounded-2xl flex items-center justify-center"
         style={{
-          background: open
-            ? "linear-gradient(135deg, hsl(220 22% 14%), hsl(220 22% 10%))"
-            : "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))",
-          boxShadow: open
-            ? "0 8px 32px hsl(220 30% 1% / 0.6), 0 0 0 1px hsl(var(--border))"
-            : "0 8px 32px hsl(var(--primary) / 0.4), 0 0 0 1px hsl(var(--primary) / 0.2)",
+          background: open ? fabClosedBg : "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))",
+          boxShadow: open ? fabClosedShadow : "0 8px 32px hsl(var(--primary) / 0.4), 0 0 0 1px hsl(var(--primary) / 0.2)",
         }}
         aria-label="Open AI chat"
       >
@@ -357,12 +384,11 @@ const PortfolioChat = () => {
             <motion.div key="open"
               initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }}
               exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
-              <MessageCircle className="w-5 h-5 text-primary-foreground" style={{ color: "hsl(220 20% 4%)" }} />
+              <MessageCircle className="w-5 h-5" style={{ color: "hsl(220 20% 4%)" }} />
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Pulse ring — shown until first open */}
         {pulse && !open && (
           <>
             <motion.div className="absolute inset-0 rounded-2xl"
@@ -377,7 +403,7 @@ const PortfolioChat = () => {
         )}
       </motion.button>
 
-      {/* Tooltip — shown before first open */}
+      {/* Tooltip */}
       <AnimatePresence>
         {pulse && !open && (
           <motion.div
@@ -386,10 +412,10 @@ const PortfolioChat = () => {
             className="fixed bottom-8 right-24 z-[199] pointer-events-none"
           >
             <div className="px-3 py-1.5 rounded-xl border border-border font-ui text-[11px] font-semibold text-foreground whitespace-nowrap"
-              style={{ background: "hsl(220 22% 10%)", boxShadow: "0 8px 24px hsl(220 30% 1% / 0.5)" }}>
+              style={{ background: tooltipBg, boxShadow: tooltipShadow }}>
               Ask me about Ethan ✨
               <div className="absolute right-[-6px] top-1/2 -translate-y-1/2 w-3 h-3 rotate-45 border-r border-t border-border"
-                style={{ background: "hsl(220 22% 10%)" }} />
+                style={{ background: tooltipBg }} />
             </div>
           </motion.div>
         )}
