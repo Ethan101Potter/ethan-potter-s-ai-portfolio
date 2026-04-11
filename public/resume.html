@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Ethan Potter — Resume</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap');
+
+:root {
+  --bg:      #070c13;
+  --surf:    #0d1520;
+  --surf2:   #111d2e;
+  --border:  #1a2d44;
+  --pri:     #2de8c8;
+  --acc:     #a78bfa;
+  --fg:      #e8edf5;
+  --muted:   #5e7494;
+  --dim:     #3a5070;
+  --green:   #34d399;
+  --amber:   #fbbf24;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{background:var(--bg);}
+body{
+  font-family:'Inter',sans-serif;
+  font-size:11.5px;
+  line-height:1.65;
+  color:var(--fg);
+  background:var(--bg);
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+
+/* ── LAYOUT ── */
+.wrap{max-width:820px;margin:0 auto;padding:44px 52px;}
+
+/* ── HEADER ── */
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:28px;position:relative;}
+.hdr::after{content:'';position:absolute;bottom:-1px;left:0;width:180px;height:1px;background:linear-gradient(90deg,var(--pri),var(--acc));}
+.name{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;letter-spacing:-0.04em;line-height:1;background:linear-gradient(135deg,var(--pri),var(--acc));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.title{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:6px;}
+.contact-col{text-align:right;display:flex;flex-direction:column;gap:4px;}
+.contact-item{font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--muted);display:flex;align-items:center;justify-content:flex-end;gap:5px;}
+.contact-item a{color:var(--pri);text-decoration:none;}
+.dot{width:3px;height:3px;border-radius:50%;background:var(--pri);display:inline-block;flex-shrink:0;}
+
+/* ── SUMMARY ── */
+.summary{font-family:'Inter',sans-serif;font-size:11.5px;font-weight:300;color:var(--muted);line-height:1.75;margin-bottom:28px;padding:14px 18px;background:var(--surf);border:1px solid var(--border);border-left:3px solid var(--pri);border-radius:8px;}
+
+/* ── SECTION ── */
+.sec{margin-bottom:26px;}
+.sec-title{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.35em;text-transform:uppercase;color:var(--pri);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.sec-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+
+/* ── EXPERIENCE ── */
+.exp-item{margin-bottom:18px;padding-left:16px;border-left:2px solid var(--border);position:relative;}
+.exp-item::before{content:'';position:absolute;left:-5px;top:6px;width:8px;height:8px;border-radius:50%;border:2px solid var(--pri);background:var(--bg);}
+.exp-item.ai::before{border-color:var(--acc);}
+.exp-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:3px;}
+.exp-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--fg);}
+.exp-period{font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:500;color:var(--muted);white-space:nowrap;margin-top:2px;}
+.exp-company{font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;margin-bottom:7px;}
+.exp-item:not(.ai) .exp-company{color:var(--pri);}
+.exp-item.ai .exp-company{color:var(--acc);}
+.badge{display:inline-flex;align-items:center;gap:3px;font-family:'Space Grotesk',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:2px 7px;border-radius:20px;border:1px solid;margin-left:8px;vertical-align:middle;}
+.badge-fs{color:var(--pri);border-color:rgba(45,232,200,0.3);background:rgba(45,232,200,0.07);}
+.badge-ai{color:var(--acc);border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.07);}
+.bullets{list-style:none;display:flex;flex-direction:column;gap:3px;}
+.bullets li{font-family:'Inter',sans-serif;font-size:11px;font-weight:300;color:var(--muted);padding-left:12px;position:relative;line-height:1.6;}
+.bullets li::before{content:'›';position:absolute;left:0;color:var(--dim);font-size:12px;line-height:1.4;}
+
+/* ── TWO-COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+
+/* ── SKILLS ── */
+.skill-group{margin-bottom:14px;}
+.skill-group-title{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.skill-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.skill-name{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:500;color:var(--fg);width:110px;flex-shrink:0;}
+.skill-bar-wrap{flex:1;height:4px;background:var(--surf2);border-radius:2px;overflow:hidden;}
+.skill-bar{height:100%;border-radius:2px;}
+.skill-bar.s{background:linear-gradient(90deg,var(--pri),var(--acc));width:100%;}
+.skill-bar.a{background:linear-gradient(90deg,var(--acc),rgba(167,139,250,0.5));width:80%;}
+.skill-bar.b{background:var(--dim);width:60%;}
+.skill-bar.c{background:var(--border);width:40%;}
+.skill-grade{font-family:'Space Grotesk',sans-serif;font-size:8.5px;font-weight:700;width:16px;text-align:center;flex-shrink:0;}
+.skill-grade.s{color:var(--pri);}
+.skill-grade.a{color:var(--acc);}
+.skill-grade.b{color:var(--dim);}
+.skill-grade.c{color:var(--border);}
+
+/* ── PROJECTS ── */
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.proj-card{background:var(--surf);border:1px solid var(--border);border-radius:8px;padding:12px 14px;position:relative;overflow:hidden;}
+.proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.proj-card.fs::before{background:linear-gradient(90deg,var(--pri),transparent);}
+.proj-card.ai::before{background:linear-gradient(90deg,var(--acc),transparent);}
+.proj-name{font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:700;color:var(--fg);margin-bottom:3px;}
+.proj-sub{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;}
+.proj-card.fs .proj-sub{color:var(--pri);}
+.proj-card.ai .proj-sub{color:var(--acc);}
+.proj-desc{font-family:'Inter',sans-serif;font-size:10px;font-weight:300;color:var(--muted);line-height:1.6;margin-bottom:7px;}
+.tag-row{display:flex;flex-wrap:wrap;gap:4px;}
+.tag{font-family:'Space Grotesk',sans-serif;font-size:8px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;border-radius:4px;border:1px solid var(--border);color:var(--dim);}
+
+/* ── EDUCATION ── */
+.edu-item{background:var(--surf);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:10px;position:relative;overflow:hidden;}
+.edu-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.edu-item.pri::before{background:linear-gradient(90deg,var(--pri),transparent);}
+.edu-item.acc::before{background:linear-gradient(90deg,var(--acc),transparent);}
+.edu-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px;}
+.edu-degree{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--fg);}
+.edu-period{font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:500;color:var(--muted);white-space:nowrap;}
+.edu-field{font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;margin-bottom:2px;}
+.edu-item.pri .edu-field{color:var(--pri);}
+.edu-item.acc .edu-field{color:var(--acc);}
+.edu-inst{font-family:'Inter',sans-serif;font-size:10px;font-weight:300;color:var(--muted);}
+.edu-meta{display:flex;gap:8px;margin-top:5px;flex-wrap:wrap;}
+.edu-badge{font-family:'Space Grotesk',sans-serif;font-size:8.5px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid rgba(45,232,200,0.3);background:rgba(45,232,200,0.07);color:var(--pri);}
+
+/* ── STATS ROW ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:26px;}
+.stat{background:var(--surf);border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:center;}
+.stat-val{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--pri),var(--acc));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:3px;}
+.stat-lbl{font-family:'Space Grotesk',sans-serif;font-size:8px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
+
+/* ── FOOTER ── */
+.doc-foot{border-top:1px solid var(--border);padding-top:16px;margin-top:32px;display:flex;justify-content:space-between;align-items:center;}
+.doc-foot-l{font-family:'Space Grotesk',sans-serif;font-size:9.5px;color:var(--muted);}
+.doc-foot-r{font-family:'Space Grotesk',sans-serif;font-size:9.5px;color:var(--muted);text-align:right;}
+
+/* ── PRINT ── */
+@media print{
+  body{background:var(--bg)!important;}
+  .wrap{padding:32px 40px;}
+  .sec,.exp-item,.proj-card,.edu-item{page-break-inside:avoid;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div>
+    <div class="name">Ethan Potter</div>
+    <div class="title">Senior Full Stack &amp; AI Engineer</div>
+  </div>
+  <div class="contact-col">
+    <div class="contact-item"><span class="dot"></span> <a href="mailto:polishchukserhii702@gmail.com">polishchukserhii702@gmail.com</a></div>
+    <div class="contact-item"><span class="dot"></span> <a href="https://github.com/polishchukserhii702-alt">github.com/polishchukserhii702-alt</a></div>
+    <div class="contact-item"><span class="dot"></span> Hong Kong SAR 🇭🇰</div>
+    <div class="contact-item"><span class="dot"></span> Available for remote &amp; on-site</div>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div class="summary">
+  Motivated and detail-oriented Full Stack Developer and AI Engineer with 8+ years of production experience spanning front-end, back-end, cloud infrastructure, and machine learning. Specialises in edge-native architectures, RAG systems, agentic AI pipelines, and high-performance SaaS platforms. Passionate about clean, maintainable code and measurable business outcomes.
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-val">40+</div><div class="stat-lbl">Projects</div></div>
+  <div class="stat"><div class="stat-val">8+</div><div class="stat-lbl">Years Exp.</div></div>
+  <div class="stat"><div class="stat-val">20+</div><div class="stat-lbl">Clients</div></div>
+  <div class="stat"><div class="stat-val">4.9★</div><div class="stat-lbl">Avg Rating</div></div>
+</div>
+
+<!-- EXPERIENCE -->
+<div class="sec">
+  <div class="sec-title">Experience</div>
+
+  <div class="exp-item ai">
+    <div class="exp-header">
+      <div>
+        <span class="exp-title">Senior Full Stack &amp; AI Engineer</span>
+        <span class="badge badge-ai">AI</span>
+      </div>
+      <div class="exp-period">Jan 2024 – Present</div>
+    </div>
+    <div class="exp-company">Independent Consulting</div>
+    <ul class="bullets">
+      <li>Architected agentic AI systems using LangGraph and multi-step reasoning loops for autonomous task execution across client workflows.</li>
+      <li>Built multimodal pipelines combining Whisper (STT), Stable Diffusion XL, and ElevenLabs TTS on serverless edge infrastructure.</li>
+      <li>Delivered edge-native applications on Cloudflare Workers + Hono with Drizzle ORM and Turso, achieving sub-50ms global response times.</li>
+      <li>Advised clients on AI adoption strategy, model evaluation, and responsible deployment practices.</li>
+    </ul>
+  </div>
+
+  <div class="exp-item ai">
+    <div class="exp-header">
+      <div>
+        <span class="exp-title">Full Stack &amp; AI Engineer</span>
+        <span class="badge badge-ai">AI</span>
+      </div>
+      <div class="exp-period">Jan 2022 – Dec 2023</div>
+    </div>
+    <div class="exp-company">AI-First Product Company</div>
+    <ul class="bullets">
+      <li>Integrated OpenAI and Hugging Face models into production web apps, building prompt-engineering pipelines and streaming UIs with the Vercel AI SDK.</li>
+      <li>Designed and deployed a RAG system using LangChain, pgvector, and FastAPI — reducing support ticket volume by 35%.</li>
+      <li>Built automated data pipelines with Python (Pandas, SQLAlchemy) feeding ML training workflows on AWS SageMaker.</li>
+      <li>Maintained full-stack ownership: Next.js front end, tRPC API, PostgreSQL, and Terraform-managed cloud infra.</li>
+    </ul>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-header">
+      <div>
+        <span class="exp-title">Senior Full Stack Developer</span>
+        <span class="badge badge-fs">Full Stack</span>
+      </div>
+      <div class="exp-period">Jan 2021 – Dec 2021</div>
+    </div>
+    <div class="exp-company">B2B SaaS Company</div>
+    <ul class="bullets">
+      <li>Owned end-to-end delivery of a multi-tenant SaaS platform — from database design to production deployment.</li>
+      <li>Architected a GraphQL API layer with DataLoader batching, eliminating N+1 query patterns at scale.</li>
+      <li>Drove performance audits that improved Lighthouse scores from 62 to 94 across the product suite.</li>
+    </ul>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-header">
+      <div>
+        <span class="exp-title">Full Stack Developer</span>
+        <span class="badge badge-fs">Full Stack</span>
+      </div>
+      <div class="exp-period">Jan 2019 – Dec 2020</div>
+    </div>
+    <div class="exp-company">Mid-size Product Startup</div>
+    <ul class="bullets">
+      <li>Led front-end architecture migration from CRA to Next.js, reducing TTFB by 40% across core pages.</li>
+      <li>Developed microservices in Node.js containerised with Docker; orchestrated deployments on AWS ECS.</li>
+      <li>Implemented WebSocket-based real-time features serving 20k+ daily active users.</li>
+    </ul>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-header">
+      <div>
+        <span class="exp-title">Junior Full Stack Developer</span>
+        <span class="badge badge-fs">Full Stack</span>
+      </div>
+      <div class="exp-period">Jan 2017 – Dec 2018</div>
+    </div>
+    <div class="exp-company">Freelance &amp; Agency Projects</div>
+    <ul class="bullets">
+      <li>Built client-facing web apps using React and Node.js/Express, covering both UI and REST API layers.</li>
+      <li>Designed relational schemas in PostgreSQL and MySQL; integrated Stripe, Twilio, and SendGrid APIs.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- SKILLS + PROJECTS (two-col) -->
+<div class="two-col">
+
+  <!-- SKILLS -->
+  <div class="sec">
+    <div class="sec-title">Skills</div>
+
+    <div class="skill-group">
+      <div class="skill-group-title">Full Stack</div>
+      <div class="skill-row"><span class="skill-name">React</span><div class="skill-bar-wrap"><div class="skill-bar s"></div></div><span class="skill-grade s">S</span></div>
+      <div class="skill-row"><span class="skill-name">TypeScript</span><div class="skill-bar-wrap"><div class="skill-bar s"></div></div><span class="skill-grade s">S</span></div>
+      <div class="skill-row"><span class="skill-name">Next.js</span><div class="skill-bar-wrap"><div class="skill-bar s"></div></div><span class="skill-grade s">S</span></div>
+      <div class="skill-row"><span class="skill-name">Node.js</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+      <div class="skill-row"><span class="skill-name">PostgreSQL</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+      <div class="skill-row"><span class="skill-name">GraphQL</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+      <div class="skill-row"><span class="skill-name">Docker</span><div class="skill-bar-wrap"><div class="skill-bar b"></div></div><span class="skill-grade b">B</span></div>
+    </div>
+
+    <div class="skill-group">
+      <div class="skill-group-title">AI &amp; ML</div>
+      <div class="skill-row"><span class="skill-name">Python</span><div class="skill-bar-wrap"><div class="skill-bar s"></div></div><span class="skill-grade s">S</span></div>
+      <div class="skill-row"><span class="skill-name">LangChain</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+      <div class="skill-row"><span class="skill-name">PyTorch</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+      <div class="skill-row"><span class="skill-name">TensorFlow</span><div class="skill-bar-wrap"><div class="skill-bar b"></div></div><span class="skill-grade b">B</span></div>
+    </div>
+
+    <div class="skill-group">
+      <div class="skill-group-title">Tools &amp; Cloud</div>
+      <div class="skill-row"><span class="skill-name">Git</span><div class="skill-bar-wrap"><div class="skill-bar s"></div></div><span class="skill-grade s">S</span></div>
+      <div class="skill-row"><span class="skill-name">AWS</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+      <div class="skill-row"><span class="skill-name">CI/CD</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+      <div class="skill-row"><span class="skill-name">Agile / TDD</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+    </div>
+  </div>
+
+  <!-- EDUCATION -->
+  <div class="sec">
+    <div class="sec-title">Education</div>
+
+    <div class="edu-item pri">
+      <div class="edu-header">
+        <div class="edu-degree">Bachelor of Science</div>
+        <div class="edu-period">2014 – 2017</div>
+      </div>
+      <div class="edu-field">Computer Science &amp; Software Engineering</div>
+      <div class="edu-inst">Vocational Training Council</div>
+      <div class="edu-meta">
+        <span class="edu-badge">GPA 3.7 / 4.0</span>
+        <span class="edu-badge">Dean's List ×3</span>
+      </div>
+    </div>
+
+    <div class="edu-item acc">
+      <div class="edu-header">
+        <div class="edu-degree">Professional Certificate</div>
+        <div class="edu-period">2018 – 2019</div>
+      </div>
+      <div class="edu-field">Artificial Intelligence &amp; Deep Learning</div>
+      <div class="edu-inst">Coursera — deeplearning.ai</div>
+      <div class="edu-meta">
+        <span class="edu-badge" style="border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.07);color:var(--acc)">Avg Score 97.2%</span>
+      </div>
+    </div>
+
+    <div class="edu-item pri">
+      <div class="edu-header">
+        <div class="edu-degree">Certification</div>
+        <div class="edu-period">2022</div>
+      </div>
+      <div class="edu-field">AWS Solutions Architect — Associate</div>
+      <div class="edu-inst">Amazon Web Services</div>
+      <div class="edu-meta">
+        <span class="edu-badge">Passed</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PROJECTS -->
+<div class="sec">
+  <div class="sec-title">Selected Projects</div>
+  <div class="proj-grid">
+
+    <div class="proj-card fs">
+      <div class="proj-name">CollabFlow</div>
+      <div class="proj-sub">Real-Time SaaS Workspace</div>
+      <div class="proj-desc">Multi-tenant platform with CRDT-based real-time editing, RBAC, and live presence. Edge-native on Cloudflare Workers — sub-50ms globally.</div>
+      <div class="tag-row"><span class="tag">Next.js 15</span><span class="tag">Hono</span><span class="tag">Cloudflare Workers</span><span class="tag">Turso</span></div>
+    </div>
+
+    <div class="proj-card ai">
+      <div class="proj-name">ContextIQ</div>
+      <div class="proj-sub">RAG Knowledge Assistant</div>
+      <div class="proj-desc">Production RAG system with hybrid vector + BM25 retrieval. 94% accuracy, 35% support ticket reduction, inline citations on every answer.</div>
+      <div class="tag-row"><span class="tag">LangChain</span><span class="tag">pgvector</span><span class="tag">OpenAI</span><span class="tag">FastAPI</span></div>
+    </div>
+
+    <div class="proj-card fs">
+      <div class="proj-name">ShopStream</div>
+      <div class="proj-sub">Headless Commerce Engine</div>
+      <div class="proj-desc">Composable e-commerce platform with RSC, optimistic UI, and Stripe checkout. Handles 10k+ concurrent sessions with zero cold starts.</div>
+      <div class="tag-row"><span class="tag">Next.js App Router</span><span class="tag">tRPC</span><span class="tag">Stripe</span><span class="tag">Upstash Redis</span></div>
+    </div>
+
+    <div class="proj-card ai">
+      <div class="proj-name">CodeReview AI</div>
+      <div class="proj-sub">Agentic PR Reviewer</div>
+      <div class="proj-desc">Autonomous agent that reviews PRs, detects OWASP vulnerabilities, and posts inline GitHub comments. 87% issue detection rate.</div>
+      <div class="tag-row"><span class="tag">LangGraph</span><span class="tag">GPT-4o</span><span class="tag">Python</span><span class="tag">GitHub API</span></div>
+    </div>
+
+    <div class="proj-card fs">
+      <div class="proj-name">DevPulse</div>
+      <div class="proj-sub">Observability Dashboard</div>
+      <div class="proj-desc">Unified logs/traces/metrics dashboard with anomaly detection. ClickHouse handles 1M+ events/sec with sub-second query times.</div>
+      <div class="tag-row"><span class="tag">Remix</span><span class="tag">OpenTelemetry</span><span class="tag">ClickHouse</span><span class="tag">Grafana</span></div>
+    </div>
+
+    <div class="proj-card ai">
+      <div class="proj-name">VoiceCanvas</div>
+      <div class="proj-sub">Multimodal AI Studio</div>
+      <div class="proj-desc">Browser studio: speak → image → narrated back in cloned voice. Whisper + Stable Diffusion XL + ElevenLabs in a single &lt;8s pipeline.</div>
+      <div class="tag-row"><span class="tag">Whisper</span><span class="tag">Stable Diffusion XL</span><span class="tag">ElevenLabs</span><span class="tag">WebRTC</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="doc-foot">
+  <div class="doc-foot-l">
+    <div>polishchukserhii702@gmail.com</div>
+    <div style="margin-top:2px">github.com/polishchukserhii702-alt</div>
+  </div>
+  <div class="doc-foot-r">
+    <div>🇭🇰 Hong Kong SAR · Available Worldwide</div>
+    <div style="margin-top:2px">Generated April 2026</div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
