@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { Github, MapPin, Thermometer, Clock, Wind, FileText, Download } from "lucide-react";
+import { Github, MapPin, Thermometer, Clock, Wind, FileText, Download, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { generateResumePDF } from "@/lib/generateResumePDF";
 
 /* ── Live HK weather via Open-Meteo (no API key) ── */
 type Weather = { temp: number; feelsLike: number; windspeed: number; code: number } | null;
@@ -100,6 +101,14 @@ const ClockDisplay = ({ time }: { time: string }) => {
 const Footer = () => {
   const weather = useHKWeather();
   const { time, date } = useHKTime();
+  const [generatingPDF, setGeneratingPDF] = useState(false);
+
+  const handleDownloadPDF = () => {
+    generateResumePDF(
+      () => setGeneratingPDF(true),
+      () => setGeneratingPDF(false)
+    );
+  };
 
   return (
     <motion.footer
@@ -220,22 +229,24 @@ const Footer = () => {
           </p>
 
           <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-end">
-            {/* Resume download button */}
-            <motion.a
-              href="/resume.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{
+            {/* Resume PDF download button */}
+            <motion.button
+              onClick={handleDownloadPDF}
+              disabled={generatingPDF}
+              whileHover={generatingPDF ? {} : {
                 scale: 1.05,
                 boxShadow: "0 0 24px hsl(var(--primary)/0.4)",
               }}
-              whileTap={{ scale: 0.96 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/40 font-ui text-xs font-semibold text-primary hover:bg-primary/10 transition-colors duration-200"
+              whileTap={generatingPDF ? {} : { scale: 0.96 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-primary/40 font-ui text-xs font-semibold text-primary transition-colors duration-200 disabled:opacity-70"
               style={{ background: "hsl(var(--primary) / 0.07)" }}
             >
-              <Download className="w-3.5 h-3.5" />
-              Resume
-            </motion.a>
+              {generatingPDF ? (
+                <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Generating…</>
+              ) : (
+                <><Download className="w-3.5 h-3.5" /> Resume PDF</>
+              )}
+            </motion.button>
 
             {/* README button */}
             <motion.a
