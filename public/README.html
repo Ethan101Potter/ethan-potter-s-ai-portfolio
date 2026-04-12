@@ -144,7 +144,7 @@
   /* ── TECH TABLE ── */
   .tech-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 8px;
   }
   .tech-card {
@@ -154,6 +154,7 @@
     padding: 12px 14px;
     position: relative;
     overflow: hidden;
+    min-width: 0; /* prevent grid blowout */
   }
   .tech-card::before {
     content: '';
@@ -177,12 +178,13 @@
     font-size: 12px;
     font-weight: 600;
     color: var(--fg);
+    word-break: break-word;
   }
 
   /* ── FEATURE CARDS ── */
   .feature-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 10px;
   }
   .feature-card {
@@ -191,6 +193,7 @@
     border-radius: 10px;
     padding: 14px 16px;
     border-left: 3px solid var(--primary);
+    min-width: 0;
   }
   .feature-card.accent { border-left-color: var(--accent); }
   .feature-title {
@@ -206,6 +209,7 @@
     font-weight: 300;
     color: var(--muted);
     line-height: 1.6;
+    word-break: break-word;
   }
 
   /* ── SECTIONS TABLE ── */
@@ -214,6 +218,7 @@
     border-collapse: collapse;
     border-radius: 10px;
     overflow: hidden;
+    table-layout: fixed; /* prevents column blowout */
   }
   .sections-table th {
     font-family: 'Space Grotesk', sans-serif;
@@ -227,6 +232,7 @@
     text-align: left;
     border-bottom: 1px solid var(--border);
   }
+  .sections-table th:first-child { width: 130px; }
   .sections-table td {
     font-family: 'Inter', sans-serif;
     font-size: 11px;
@@ -235,14 +241,16 @@
     border-bottom: 1px solid rgba(30,45,66,0.5);
     background: var(--surface);
     vertical-align: top;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
   .sections-table tr:last-child td { border-bottom: none; }
   .sections-table td:first-child {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
     color: var(--primary);
-    white-space: nowrap;
-    width: 140px;
+    white-space: normal; /* was nowrap — caused overflow */
+    word-break: break-word;
   }
   .sections-table td:last-child { color: var(--muted); font-weight: 300; }
 
@@ -303,7 +311,7 @@
   /* ── STATS ROW ── */
   .stats-row {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 10px;
     margin-bottom: 10px;
   }
@@ -313,6 +321,7 @@
     border-radius: 10px;
     padding: 14px;
     text-align: center;
+    min-width: 0;
   }
   .stat-value {
     font-family: 'Syne', sans-serif;
@@ -333,6 +342,76 @@
     text-transform: uppercase;
     color: var(--muted);
   }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+  }
+  .skill-group-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .skill-group-header {
+    padding: 8px 14px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .skill-group-header.pri { color: var(--primary); }
+  .skill-group-header.acc { color: var(--accent); }
+  .skill-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-bottom: 1px solid rgba(30,45,66,0.4);
+  }
+  .skill-row:last-child { border-bottom: none; }
+  .skill-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--fg);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .skill-bar-wrap {
+    width: 60px;
+    flex-shrink: 0;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .skill-bar { height: 100%; border-radius: 2px; }
+  .skill-bar.s { width: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); }
+  .skill-bar.a { width: 80%; background: var(--accent); }
+  .skill-bar.b { width: 60%; background: #5e7494; }
+  .skill-bar.c { width: 40%; background: var(--border); }
+  .skill-grade {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    width: 14px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .skill-grade.s { color: var(--primary); }
+  .skill-grade.a { color: var(--accent); }
+  .skill-grade.b { color: var(--muted); }
+  .skill-grade.c { color: var(--border); }
 
   /* ── FOOTER ── */
   .doc-footer {
@@ -361,11 +440,23 @@
     body { background: var(--bg) !important; }
     .page { padding: 40px 48px; }
     .code-block, .file-tree, .tech-card, .feature-card,
-    .stat-card, .sections-table td, .sections-table th {
+    .stat-card, .sections-table td, .sections-table th,
+    .skill-group-card {
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
     }
     .section { page-break-inside: avoid; }
+    .skills-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .page { padding: 28px 20px; }
+    .header-top { flex-direction: column; gap: 12px; }
+    .tech-grid { grid-template-columns: 1fr 1fr; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
@@ -471,6 +562,53 @@
         <tr><td>Footer</td><td>HK identity card with 🇭🇰 flag, live clock (UTC+8), live weather (Open-Meteo), GitHub + README buttons</td></tr>
       </tbody>
     </table>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="section">
+    <div class="section-title">Skills</div>
+    <div class="skills-grid">
+
+      <div class="skill-group-card">
+        <div class="skill-group-header pri">Full Stack</div>
+        <div class="skill-row"><span class="skill-name">React</span><div class="skill-bar-wrap"><div class="skill-bar s"></div></div><span class="skill-grade s">S</span></div>
+        <div class="skill-row"><span class="skill-name">TypeScript</span><div class="skill-bar-wrap"><div class="skill-bar s"></div></div><span class="skill-grade s">S</span></div>
+        <div class="skill-row"><span class="skill-name">Next.js</span><div class="skill-bar-wrap"><div class="skill-bar s"></div></div><span class="skill-grade s">S</span></div>
+        <div class="skill-row"><span class="skill-name">Node.js</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+        <div class="skill-row"><span class="skill-name">PostgreSQL</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+        <div class="skill-row"><span class="skill-name">GraphQL</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+        <div class="skill-row"><span class="skill-name">Docker</span><div class="skill-bar-wrap"><div class="skill-bar b"></div></div><span class="skill-grade b">B</span></div>
+      </div>
+
+      <div class="skill-group-card">
+        <div class="skill-group-header acc">AI &amp; ML</div>
+        <div class="skill-row"><span class="skill-name">Python</span><div class="skill-bar-wrap"><div class="skill-bar s"></div></div><span class="skill-grade s">S</span></div>
+        <div class="skill-row"><span class="skill-name">LangChain</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+        <div class="skill-row"><span class="skill-name">PyTorch</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+        <div class="skill-row"><span class="skill-name">TensorFlow</span><div class="skill-bar-wrap"><div class="skill-bar b"></div></div><span class="skill-grade b">B</span></div>
+        <div class="skill-row"><span class="skill-name">R</span><div class="skill-bar-wrap"><div class="skill-bar b"></div></div><span class="skill-grade b">B</span></div>
+        <div class="skill-row"><span class="skill-name">Java</span><div class="skill-bar-wrap"><div class="skill-bar c"></div></div><span class="skill-grade c">C</span></div>
+        <div class="skill-row"><span class="skill-name">C++</span><div class="skill-bar-wrap"><div class="skill-bar c"></div></div><span class="skill-grade c">C</span></div>
+      </div>
+
+      <div class="skill-group-card">
+        <div class="skill-group-header pri">Tools &amp; Practices</div>
+        <div class="skill-row"><span class="skill-name">Git</span><div class="skill-bar-wrap"><div class="skill-bar s"></div></div><span class="skill-grade s">S</span></div>
+        <div class="skill-row"><span class="skill-name">CI/CD</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+        <div class="skill-row"><span class="skill-name">AWS</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+        <div class="skill-row"><span class="skill-name">GCP</span><div class="skill-bar-wrap"><div class="skill-bar b"></div></div><span class="skill-grade b">B</span></div>
+        <div class="skill-row"><span class="skill-name">Azure</span><div class="skill-bar-wrap"><div class="skill-bar b"></div></div><span class="skill-grade b">B</span></div>
+        <div class="skill-row"><span class="skill-name">Agile</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+        <div class="skill-row"><span class="skill-name">Code Review</span><div class="skill-bar-wrap"><div class="skill-bar a"></div></div><span class="skill-grade a">A</span></div>
+      </div>
+
+    </div>
+    <div style="margin-top:8px;font-family:'Space Grotesk',sans-serif;font-size:9px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;">
+      <span><span style="color:var(--primary);font-weight:700;">S</span> Expert</span>
+      <span><span style="color:var(--accent);font-weight:700;">A</span> Advanced</span>
+      <span><span style="color:#5e7494;font-weight:700;">B</span> Proficient</span>
+      <span><span style="color:var(--border);font-weight:700;">C</span> Familiar</span>
+    </div>
   </div>
 
   <!-- GETTING STARTED -->
