@@ -59,26 +59,38 @@ const skillCategories: { title: string; color: string; skills: Skill[] }[] = [
 /* ── Star row ── */
 const StarRow = ({ value, max = 5, color, delay = 0 }: {
   value: number; max?: number; color: string; delay?: number;
-}) => (
-  <div className="flex items-center gap-0.5">
-    {Array.from({ length: max }).map((_, i) => {
-      const fill = Math.min(1, Math.max(0, value - i));
-      return (
-        <motion.div key={i} initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.3, delay: delay + i * 0.06, ease: [0.23, 1, 0.32, 1] }}
-          className="relative">
-          <Star className="w-3.5 h-3.5 text-border" />
-          {fill > 0 && (
-            <div className="absolute inset-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
-              <Star className="w-3.5 h-3.5" style={{ color: `hsl(var(--${color}))`, fill: `hsl(var(--${color}))` }} />
-            </div>
-          )}
-        </motion.div>
-      );
-    })}
-  </div>
-);
+}) => {
+  const order = Array.from({ length: max }, (_, i) => i).sort(() => Math.random() - 0.5);
+  return (
+    <div className="flex items-center gap-0.5">
+      {Array.from({ length: max }).map((_, i) => {
+        const fill = Math.min(1, Math.max(0, value - i));
+        const rank = order.indexOf(i);
+        return (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, scale: 0.4, rotate: (rank % 2 === 0 ? 1 : -1) * (20 + rank * 15) }}
+            whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, delay: delay + rank * 0.08, ease: [0.23, 1, 0.32, 1] }}
+            style={{ width: "14px", height: "14px", position: "relative", flexShrink: 0 }}
+          >
+            {/* Empty star — always visible */}
+            <Star style={{ position: "absolute", top: 0, left: 0, width: "14px", height: "14px", color: "hsl(var(--border))" }} />
+            {/* Filled star — clipped from the LEFT, growing rightward */}
+            {fill > 0 && (
+              <Star style={{
+                position: "absolute", top: 0, left: 0, width: "14px", height: "14px",
+                color: `hsl(var(--${color}))`, fill: `hsl(var(--${color}))`,
+                clipPath: `inset(0 ${(1 - fill) * 100}% 0 0)`,
+              }} />
+            )}
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+};
 
 const gradeLabel: Record<Skill["grade"], string> = { S: "Expert", A: "Advanced", B: "Proficient", C: "Familiar" };
 const gradeColor: Record<Skill["grade"], string> = {

@@ -105,21 +105,31 @@ const reviews: Review[] = [
 const StarDisplay = ({ value, color, delay = 0, size = "md" }: {
   value: number; color: "primary" | "accent"; delay?: number; size?: "sm" | "md";
 }) => {
-  const sz = size === "sm" ? "w-3 h-3" : "w-3.5 h-3.5";
+  const px = size === "sm" ? 12 : 14;
+  const order = Array.from({ length: 5 }, (_, i) => i).sort(() => Math.random() - 0.5);
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => {
         const fill = Math.min(1, Math.max(0, value - i));
+        const rank = order.indexOf(i);
         return (
-          <motion.div key={i} initial={{ scale: 0, rotate: -30, opacity: 0 }}
-            whileInView={{ scale: 1, rotate: 0, opacity: 1 }} viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: delay + i * 0.07, ease: [0.23, 1, 0.32, 1] }}
-            className={`relative ${sz}`}>
-            <Star className={`${sz} text-border absolute inset-0`} />
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, scale: 0.4, rotate: (rank % 2 === 0 ? 1 : -1) * (20 + rank * 15) }}
+            whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, delay: delay + rank * 0.09, ease: [0.23, 1, 0.32, 1] }}
+            style={{ width: `${px}px`, height: `${px}px`, position: "relative", flexShrink: 0 }}
+          >
+            {/* Empty star */}
+            <Star style={{ position: "absolute", top: 0, left: 0, width: `${px}px`, height: `${px}px`, color: "hsl(var(--border))" }} />
+            {/* Filled star — clipped from the LEFT, growing rightward */}
             {fill > 0 && (
-              <div className="absolute inset-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
-                <Star className={sz} style={{ color: `hsl(var(--${color}))`, fill: `hsl(var(--${color}))` }} />
-              </div>
+              <Star style={{
+                position: "absolute", top: 0, left: 0, width: `${px}px`, height: `${px}px`,
+                color: `hsl(var(--${color}))`, fill: `hsl(var(--${color}))`,
+                clipPath: `inset(0 ${(1 - fill) * 100}% 0 0)`,
+              }} />
             )}
           </motion.div>
         );

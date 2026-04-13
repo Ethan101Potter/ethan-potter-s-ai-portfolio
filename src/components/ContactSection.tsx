@@ -14,7 +14,7 @@ const inputClass =
 /* Auto-type "HIT" into each field in sequence, then clear and loop */
 const FIELD_ORDER: (keyof Fields)[] = ["name", "email", "subject", "message"];
 const HIT_VALUES: Record<keyof Fields, string> = {
-  name:    "HIT",
+  name:    "IT",
   email:   "HIT",
   subject: "HIT",
   message: "HIT",
@@ -68,10 +68,8 @@ const ContactSection = () => {
   const [submitError, setSubmitError] = useState("");
   const [userEditing, setUserEditing] = useState(false);
 
-  // auto-type only when section is visible and user hasn't started typing
-  useAutoType(inView && !userEditing && !success, (field, value) => {
-    setFields(f => ({ ...f, [field]: value }));
-  });
+  // auto-type disabled — fields start empty
+  // useAutoType(inView && !userEditing && !success, ...);
 
   const validate = (): boolean => {
     const next: Errors = {};
