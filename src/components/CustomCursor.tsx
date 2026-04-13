@@ -165,7 +165,7 @@ const CustomCursor = () => {
         style={{
           position: "fixed",
           top: 0, left: 0,
-          width: 80, height: 80,
+          width: 800, height: 800,
           borderRadius: "50%",
           background: "radial-gradient(circle, hsl(174 85% 56% / 0.4) 0%, hsl(265 72% 68% / 0.15) 50%, transparent 70%)",
           pointerEvents: "none",
@@ -182,10 +182,10 @@ const CustomCursor = () => {
         style={{
           position: "fixed",
           top: 0, left: 0,
-          width: 20, height: 8,
+          width: 200, height: 80,
           borderRadius: "50%",
           background: "hsl(220 30% 5%)",
-          filter: "blur(4px)",
+          filter: "blur(18px)",
           pointerEvents: "none",
           zIndex: 9996,
           opacity: 0,

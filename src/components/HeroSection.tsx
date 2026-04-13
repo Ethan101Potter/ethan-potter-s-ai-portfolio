@@ -1,26 +1,87 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
+/* ── Auto-typewriter ── */
+const PHRASES = [
+  "Full Stack Developer & AI Engineer",
+  "React · Next.js · TypeScript",
+  "LangChain · PyTorch · RAG Systems",
+  "Edge-Native · Serverless · DevOps",
+  "Building the future, one commit at a time",
+];
+
+const Typewriter = () => {
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [displayed, setDisplayed] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const phrase = PHRASES[phraseIdx];
+
+    if (paused) {
+      timeoutRef.current = setTimeout(() => {
+        setPaused(false);
+        setDeleting(true);
+      }, 1800);
+      return;
+    }
+
+    if (!deleting && displayed.length < phrase.length) {
+      timeoutRef.current = setTimeout(() => {
+        setDisplayed(phrase.slice(0, displayed.length + 1));
+      }, 48);
+    } else if (!deleting && displayed.length === phrase.length) {
+      setPaused(true);
+    } else if (deleting && displayed.length > 0) {
+      timeoutRef.current = setTimeout(() => {
+        setDisplayed(phrase.slice(0, displayed.length - 1));
+      }, 24);
+    } else if (deleting && displayed.length === 0) {
+      setDeleting(false);
+      setPhraseIdx(i => (i + 1) % PHRASES.length);
+    }
+
+    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
+  }, [displayed, deleting, paused, phraseIdx]);
+
+  return (
+    <span className="inline-flex items-center gap-1">
+      <span className="text-shimmer">{displayed}</span>
+      <motion.span
+        animate={{ opacity: [1, 0, 1] }}
+        transition={{ duration: 0.9, repeat: Infinity, ease: "easeInOut" }}
+        className="inline-block w-0.5 h-3.5 bg-primary rounded-full"
+      />
+    </span>
+  );
+};
 
 /* Floating 3D geometry piece */
 const FloatShape = ({
   className,
   delay = 0,
   size = 60,
+  depth = 0,
 }: {
   className?: string;
   delay?: number;
   size?: number;
+  depth?: number;
 }) => (
   <motion.div
     className={`absolute rounded-xl border border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5 backdrop-blur-sm ${className}`}
-    style={{ width: size, height: size }}
+    style={{ width: size, height: size, translateZ: depth }}
     initial={{ opacity: 0, scale: 0.5, rotateX: 45, rotateY: 45 }}
     animate={{
       opacity: [0.3, 0.6, 0.3],
       rotateX: [20, 50, 20],
       rotateY: [30, 60, 30],
+      rotateZ: [0, depth > 0 ? 15 : -10, 0],
       y: [0, -20, 0],
+      translateZ: [depth, depth + 30, depth],
     }}
     transition={{
       duration: 8 + delay,
@@ -36,8 +97,8 @@ const TiltCard = ({ children }: { children: React.ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), { stiffness: 200, damping: 30 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), { stiffness: 200, damping: 30 });
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), { stiffness: 20, damping: 30 });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), { stiffness: 20, damping: 30 });
 
   const handleMouse = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = ref.current?.getBoundingClientRect();
@@ -61,7 +122,7 @@ const TiltCard = ({ children }: { children: React.ReactNode }) => {
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 scene-3d scanlines">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 scene-3d scanlines" style={{ perspective: "1200px", transformStyle: "preserve-3d" }}>
 
       {/* Animated grid */}
       <div
@@ -88,13 +149,13 @@ const HeroSection = () => {
         style={{ background: "hsl(var(--accent))", opacity: 0.14, animationDelay: "3s" }}
       />
 
-      {/* Floating 3D shapes */}
-      <FloatShape className="top-[15%] left-[8%]"  size={50} delay={0} />
-      <FloatShape className="top-[25%] right-[10%]" size={70} delay={1.5} />
-      <FloatShape className="bottom-[20%] left-[12%]" size={40} delay={3} />
-      <FloatShape className="bottom-[30%] right-[8%]" size={55} delay={2} />
-      <FloatShape className="top-[55%] left-[5%]"  size={30} delay={4} />
-      <FloatShape className="top-[10%] right-[25%]" size={35} delay={2.5} />
+      {/* Floating 3D shapes — stacked at different Z depths */}
+      <FloatShape className="top-[15%] left-[8%]"   size={50} delay={0}   depth={-60} />
+      <FloatShape className="top-[25%] right-[10%]"  size={70} delay={1.5} depth={40}  />
+      <FloatShape className="bottom-[20%] left-[12%]" size={40} delay={3}  depth={80}  />
+      <FloatShape className="bottom-[30%] right-[8%]" size={55} delay={2}  depth={-30} />
+      <FloatShape className="top-[55%] left-[5%]"    size={30} delay={4}   depth={60}  />
+      <FloatShape className="top-[10%] right-[25%]"  size={35} delay={2.5} depth={-80} />
 
       {/* Main content */}
       <div className="relative z-10 text-center max-w-4xl mx-auto">
@@ -103,8 +164,8 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.23, 1, 0.32, 1] }}
         >
-          <p className="font-ui text-primary text-xs font-medium tracking-[0.5em] uppercase mb-6 text-shimmer">
-            Full Stack Developer & AI Engineer
+          <p className="font-ui text-primary text-xs font-medium tracking-[0.5em] uppercase mb-6 min-h-[1.5em]">
+            <Typewriter />
           </p>
         </motion.div>
 

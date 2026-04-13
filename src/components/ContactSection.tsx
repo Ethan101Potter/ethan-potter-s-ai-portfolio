@@ -1,6 +1,6 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Mail, CheckCircle, Loader2, Send } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const WEBHOOK_URL =
   "https://chat.googleapis.com/v1/spaces/AAAAvMSn7Xo/messages?key=AIzaSyDdI0hCZtE_YiTiviwneL0ozVPjDkTMDNA&token=your_token_here";
@@ -11,12 +11,67 @@ type Errors = Partial<Record<keyof Fields, string>>;
 const inputClass =
   "w-full px-4 py-3 rounded-xl border border-border bg-muted/30 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-all duration-200";
 
+/* Auto-type "HIT" into each field in sequence, then clear and loop */
+const FIELD_ORDER: (keyof Fields)[] = ["name", "email", "subject", "message"];
+const HIT_VALUES: Record<keyof Fields, string> = {
+  name:    "HIT",
+  email:   "HIT",
+  subject: "HIT",
+  message: "HIT",
+};
+
+function useAutoType(active: boolean, onUpdate: (f: keyof Fields, v: string) => void) {
+  useEffect(() => {
+    if (!active) return;
+    let cancelled = false;
+
+    const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
+
+    const run = async () => {
+      while (!cancelled) {
+        for (const field of FIELD_ORDER) {
+          const target = HIT_VALUES[field];
+          // type in
+          for (let i = 1; i <= target.length; i++) {
+            if (cancelled) return;
+            onUpdate(field, target.slice(0, i));
+            await sleep(90);
+          }
+          await sleep(420);
+        }
+        // erase all
+        for (const field of [...FIELD_ORDER].reverse()) {
+          const target = HIT_VALUES[field];
+          for (let i = target.length - 1; i >= 0; i--) {
+            if (cancelled) return;
+            onUpdate(field, target.slice(0, i));
+            await sleep(45);
+          }
+          await sleep(120);
+        }
+        await sleep(800);
+      }
+    };
+
+    run();
+    return () => { cancelled = true; };
+  }, [active, onUpdate]);
+}
+
 const ContactSection = () => {
   const [fields, setFields] = useState<Fields>({ name: "", email: "", subject: "", message: "" });
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, { once: false, margin: "-100px" });
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [userEditing, setUserEditing] = useState(false);
+
+  // auto-type only when section is visible and user hasn't started typing
+  useAutoType(inView && !userEditing && !success, (field, value) => {
+    setFields(f => ({ ...f, [field]: value }));
+  });
 
   const validate = (): boolean => {
     const next: Errors = {};
@@ -52,12 +107,13 @@ const ContactSection = () => {
   };
 
   const set = (key: keyof Fields) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setUserEditing(true);
     setFields(f => ({ ...f, [key]: e.target.value }));
     if (errors[key]) setErrors(prev => ({ ...prev, [key]: undefined }));
   };
 
   return (
-    <section id="contact" className="py-32 px-6 scene-3d overflow-hidden">
+    <section ref={sectionRef} id="contact" className="py-32 px-6 scene-3d overflow-hidden">
       <div className="max-w-5xl mx-auto">
         {/* Background glow ring */}
         <div
@@ -68,8 +124,8 @@ const ContactSection = () => {
         <div className="grid lg:grid-cols-2 gap-16 items-start relative">
           {/* Left */}
           <motion.div
-            initial={{ opacity: 0, y: 50, rotateX: 15 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            initial={{ opacity: 0, y: 50, rotateX: 15, rotateY: -10 }}
+            whileInView={{ opacity: 1, y: 0, rotateX: 0, rotateY: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.9, ease: [0.23, 1, 0.32, 1] }}
           >
@@ -88,7 +144,7 @@ const ContactSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.04, x: 6, transition: { duration: 2.0 } }}
               className="inline-flex items-center gap-3 group"
             >
               <span
@@ -113,10 +169,12 @@ const ContactSection = () => {
 
           {/* Right — form */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 40, rotateY: 12 }}
+            whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.23, 1, 0.32, 1] }}
+            whileHover={{ rotateX: -2, rotateY: -3, translateZ: 10, transition: { duration: 4.0 } }}
+            style={{ transformStyle: "preserve-3d", perspective: 1000 }}
           >
             <AnimatePresence mode="wait">
               {success ? (
@@ -138,7 +196,7 @@ const ContactSection = () => {
                   <p className="font-display text-2xl font-extrabold">Message sent!</p>
                   <p className="font-body text-muted-foreground text-sm font-light">I'll get back to you soon.</p>
                   <motion.button
-                    onClick={() => setSuccess(false)}
+                    onClick={() => { setSuccess(false); setUserEditing(false); }}
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     className="mt-2 px-6 py-2.5 rounded-xl border border-primary/40 font-ui text-sm font-semibold text-primary transition-all duration-200"

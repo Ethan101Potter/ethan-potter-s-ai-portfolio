@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { Github, MapPin, Thermometer, Clock, Wind, FileText } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useHoverLight } from "@/hooks/use-hover-light";
+import { LightFlow } from "@/components/LightFlow";
 
 /* ── Live HK weather via Open-Meteo (no API key) ── */
 type Weather = { temp: number; feelsLike: number; windspeed: number; code: number } | null;
@@ -100,16 +102,19 @@ const ClockDisplay = ({ time }: { time: string }) => {
 const Footer = () => {
   const weather = useHKWeather();
   const { time, date } = useHKTime();
+  const light = useHoverLight();
 
   return (
     <motion.footer
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 20, rotateX: 6 }}
+      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
       className="border-t border-border px-6 pt-12 pb-8 relative overflow-hidden"
       style={{
         background: "linear-gradient(to top, hsl(220 30% 3%), hsl(220 30% 4% / 0.6))",
+        perspective: "1200px",
+        transformStyle: "preserve-3d",
       }}
     >
       {/* Subtle glow behind HK card */}
@@ -126,8 +131,12 @@ const Footer = () => {
           whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-          className="rounded-2xl border border-border surface-3d overflow-hidden mb-8"
+          whileHover={{ scale: 1.015, rotateX: -3, rotateY: 6, rotateZ: 0.5, translateZ: 18, transition: { duration: 3.5, ease: [0.23, 1, 0.32, 1] } }}
+          ref={light.ref}
+          {...light.handlers}
+          className="relative rounded-2xl border border-border surface-3d overflow-hidden mb-8"
         >
+          <LightFlow hovered={light.hovered} spotX={light.spotX} spotY={light.spotY} color="primary" intensity={0.7} />
           {/* Card accent bar */}
           <div className="h-1 w-full" style={{
             background: "linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)))"

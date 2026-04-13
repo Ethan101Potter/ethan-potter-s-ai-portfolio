@@ -1,6 +1,8 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Code2, Brain, Users, Zap } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
+import { useHoverLight } from "@/hooks/use-hover-light";
+import { LightFlow } from "@/components/LightFlow";
 
 const highlights = [
   { icon: Code2, title: "Full Stack", desc: "End-to-end web development with modern frameworks", color: "primary" },
@@ -22,8 +24,8 @@ const Card3D = ({ children, className }: { children: React.ReactNode; className?
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [10, -10]), { stiffness: 300, damping: 30 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-10, 10]), { stiffness: 300, damping: 30 });
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [10, -10]), { stiffness: 30, damping: 30 });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-10, 10]), { stiffness: 30, damping: 30 });
 
   return (
     <motion.div
@@ -49,6 +51,7 @@ const StatCounter = ({ value, label, color, index }: {
   const numeric = parseInt(value);
   const suffix = value.replace(String(numeric), "");
   const [count, setCount] = useState(0);
+  const light = useHoverLight();
 
   useEffect(() => {
     let start = 0;
@@ -76,21 +79,24 @@ const StatCounter = ({ value, label, color, index }: {
     >
       <Card3D>
         <div
-          className={`p-6 rounded-xl border border-border surface-3d border-l-2 transition-all duration-300`}
+          ref={light.ref}
+          {...light.handlers}
+          className={`relative p-6 rounded-xl border border-border surface-3d border-l-2 overflow-hidden transition-all duration-300`}
           style={{
             borderLeftColor: `hsl(var(--${color}))`,
             boxShadow: `0 20px 40px -12px hsl(var(--${color}) / 0.12), inset 0 1px 0 hsl(var(--${color}) / 0.08)`,
           }}
         >
+          <LightFlow hovered={light.hovered} spotX={light.spotX} spotY={light.spotY} color={color} />
           <p
-            className={`font-display text-5xl font-extrabold leading-none mb-2 ${color === "primary" ? "text-gradient" : ""}`}
+            className={`relative z-30 font-display text-5xl font-extrabold leading-none mb-2 ${color === "primary" ? "text-gradient" : ""}`}
             style={color === "accent" ? { color: `hsl(var(--accent))` } : undefined}
           >
             {count}{suffix}
           </p>
-          <p className="font-ui text-xs tracking-wider uppercase text-muted-foreground">{label}</p>
+          <p className="relative z-30 font-ui text-xs tracking-wider uppercase text-muted-foreground">{label}</p>
           {label === "Domains Covered" && (
-            <div className="flex flex-wrap gap-1.5 mt-3">
+            <div className="relative z-30 flex flex-wrap gap-1.5 mt-3">
               {domains.map(d => (
                 <span
                   key={d}
@@ -114,7 +120,7 @@ const StatCounter = ({ value, label, color, index }: {
 
 const AboutSection = () => {
   return (
-    <section id="about" className="py-32 px-6 scene-3d">
+    <section id="about" className="py-32 px-6 scene-3d" style={{ perspective: "1400px" }}>
       <div className="max-w-5xl mx-auto">
         <div className="grid lg:grid-cols-5 gap-12 items-start">
           {/* Left: 3 cols */}
@@ -145,23 +151,29 @@ const AboutSection = () => {
             </motion.p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {highlights.map((item, i) => (
+              {highlights.map((item, i) => {
+                const light = useHoverLight();
+                return (
                 <motion.div
                   key={item.title}
                   initial={{ opacity: 0, y: 30, rotateY: -10 }}
                   whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.08 * i, ease: [0.23, 1, 0.32, 1] }}
+                  whileHover={{ scale: 1.04, rotateY: 4, rotateX: -3, rotateZ: 1.5, translateZ: 20, transition: { duration: 2.5 } }}
                 >
                   <Card3D className="h-full">
                     <div
-                      className="flex items-center gap-4 p-4 rounded-xl border border-border surface-3d h-full"
+                      ref={light.ref}
+                      {...light.handlers}
+                      className="relative flex items-center gap-4 p-4 rounded-xl border border-border surface-3d h-full overflow-hidden transition-all duration-300"
                       style={{
                         boxShadow: `0 16px 32px -10px hsl(var(--${item.color}) / 0.12), inset 0 1px 0 hsl(var(--${item.color}) / 0.08)`,
                       }}
                     >
+                      <LightFlow hovered={light.hovered} spotX={light.spotX} spotY={light.spotY} color={item.color as "primary"|"accent"} />
                       <div
-                        className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                        className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 relative z-30"
                         style={{
                           background: `hsl(var(--${item.color}) / 0.15)`,
                           boxShadow: `0 0 16px hsl(var(--${item.color}) / 0.2)`,
@@ -169,14 +181,15 @@ const AboutSection = () => {
                       >
                         <item.icon className="w-4 h-4" style={{ color: `hsl(var(--${item.color}))` }} />
                       </div>
-                      <div>
+                      <div className="relative z-30">
                         <h3 className="font-ui text-sm font-semibold tracking-tight mb-0.5">{item.title}</h3>
                         <p className="font-body text-muted-foreground text-xs leading-relaxed font-light">{item.desc}</p>
                       </div>
                     </div>
                   </Card3D>
                 </motion.div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

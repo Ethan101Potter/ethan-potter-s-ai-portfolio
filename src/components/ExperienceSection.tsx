@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { Layers, Brain } from "lucide-react";
+import { useHoverLight } from "@/hooks/use-hover-light";
+import { LightFlow } from "@/components/LightFlow";
 
 type Role = {
   period: string;
@@ -76,9 +78,61 @@ const badgeConfig = {
   ai: { label: "Full Stack & AI", icon: Brain, className: "text-accent border-accent/40 bg-accent/10" },
 };
 
+const ExperienceCard = ({ exp, i }: { exp: Role; i: number }) => {
+  const badge = badgeConfig[exp.type];
+  const BadgeIcon = badge.icon;
+  const light = useHoverLight();
+  const color = exp.type === "ai" ? "accent" : "primary";
+  return (
+    <motion.div
+      key={i}
+      initial={{ opacity: 0, x: -40, rotateY: -8 }}
+      whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7, delay: 0.1 * i, ease: [0.23, 1, 0.32, 1] }}
+      className="relative pl-12"
+    >
+      <motion.div
+        className={`absolute left-2.5 top-2 w-3 h-3 rounded-full border-2 bg-background border-${color}`}
+        style={{ boxShadow: `0 0 12px hsl(var(--${color}) / 0.6)` }}
+        animate={{ scale: [1, 1.3, 1] }}
+        transition={{ duration: 3, repeat: Infinity, delay: i * 0.4 }}
+      />
+      <motion.div
+        ref={light.ref}
+        {...light.handlers}
+        whileHover={{ x: 8, scale: 1.01, rotateZ: 0.6, translateZ: 14, boxShadow: `0 24px 60px -8px hsl(var(--${color}) / 0.3), 0 0 0 1px hsl(var(--${color}) / 0.15)`, transition: { duration: 2.0 } }}
+        className="relative p-5 rounded-xl border border-border surface-3d overflow-hidden"
+        style={{ boxShadow: `0 8px 32px -8px hsl(var(--${color}) / 0.1)`, transformStyle: "preserve-3d" }}
+      >
+        <LightFlow hovered={light.hovered} spotX={light.spotX} spotY={light.spotY} color={color} />
+        <div className="relative z-30">
+          <div className="flex flex-wrap items-center gap-3 mb-1">
+            <span className="font-ui text-[11px] font-medium text-muted-foreground tracking-wide">{exp.period}</span>
+            <span className={`inline-flex items-center gap-1 text-[10px] font-ui font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full border ${badge.className}`}>
+              <BadgeIcon className="w-3 h-3" />
+              {badge.label}
+            </span>
+          </div>
+          <h3 className="font-display text-lg font-bold text-foreground leading-tight">{exp.title}</h3>
+          <p className="font-ui text-sm font-medium text-primary/80 mb-3">{exp.company}</p>
+          <ul className="space-y-1.5">
+            {exp.bullets.map((b, j) => (
+              <li key={j} className="font-body text-sm text-muted-foreground leading-[1.7] flex gap-2 font-light">
+                <span className="mt-2 w-1 h-1 rounded-full bg-muted-foreground/50 shrink-0" />
+                {b}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const ExperienceSection = () => {
   return (
-    <section id="experience" className="py-32 px-6 scene-3d">
+    <section id="experience" className="py-32 px-6 scene-3d" style={{ perspective: "1600px" }}>
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 40, rotateX: 12 }}
@@ -107,56 +161,9 @@ const ExperienceSection = () => {
           />
 
           <div className="space-y-10">
-            {experiences.map((exp, i) => {
-              const badge = badgeConfig[exp.type];
-              const BadgeIcon = badge.icon;
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -40, rotateY: -8 }}
-                  whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.7, delay: 0.1 * i, ease: [0.23, 1, 0.32, 1] }}
-                  className="relative pl-12"
-                >
-                  {/* Glowing dot */}
-                  <motion.div
-                    className={`absolute left-2.5 top-2 w-3 h-3 rounded-full border-2 bg-background ${exp.type === "ai" ? "border-accent" : "border-primary"}`}
-                    style={{
-                      boxShadow: `0 0 12px hsl(var(--${exp.type === "ai" ? "accent" : "primary"}) / 0.6)`,
-                    }}
-                    animate={{ scale: [1, 1.3, 1] }}
-                    transition={{ duration: 3, repeat: Infinity, delay: i * 0.4 }}
-                  />
-
-                  <motion.div
-                    whileHover={{ x: 6, transition: { duration: 0.2 } }}
-                    className="p-5 rounded-xl border border-border surface-3d"
-                    style={{
-                      boxShadow: `0 8px 32px -8px hsl(var(--${exp.type === "ai" ? "accent" : "primary"}) / 0.1)`,
-                    }}
-                  >
-                    <div className="flex flex-wrap items-center gap-3 mb-1">
-                      <span className="font-ui text-[11px] font-medium text-muted-foreground tracking-wide">{exp.period}</span>
-                      <span className={`inline-flex items-center gap-1 text-[10px] font-ui font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full border ${badge.className}`}>
-                        <BadgeIcon className="w-3 h-3" />
-                        {badge.label}
-                      </span>
-                    </div>
-                    <h3 className="font-display text-lg font-bold text-foreground leading-tight">{exp.title}</h3>
-                    <p className="font-ui text-sm font-medium text-primary/80 mb-3">{exp.company}</p>
-                    <ul className="space-y-1.5">
-                      {exp.bullets.map((b, j) => (
-                        <li key={j} className="font-body text-sm text-muted-foreground leading-[1.7] flex gap-2 font-light">
-                          <span className="mt-2 w-1 h-1 rounded-full bg-muted-foreground/50 shrink-0" />
-                          {b}
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                </motion.div>
-              );
-            })}
+            {experiences.map((exp, i) => (
+              <ExperienceCard key={i} exp={exp} i={i} />
+            ))}
           </div>
         </div>
       </div>

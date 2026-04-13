@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { GraduationCap, BookOpen, Award } from "lucide-react";
+import { useHoverLight } from "@/hooks/use-hover-light";
+import { LightFlow } from "@/components/LightFlow";
 
 type Course = { name: string; grade: string };
 type EducationEntry = {
@@ -71,6 +73,72 @@ const gradeColor = (g: string) => {
   return "text-muted-foreground";
 };
 
+const EducationCard = ({ entry, i }: { entry: EducationEntry; i: number }) => {
+  const Icon = entry.icon;
+  const light = useHoverLight();
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40, rotateX: 10, rotateY: i % 2 === 0 ? -22 : 22, rotateZ: i % 2 === 0 ? -2 : 2 }}
+      whileInView={{ opacity: 1, y: 0, rotateX: 0, rotateY: 0, rotateZ: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.9, delay: 0.12 * i, ease: [0.23, 1, 0.32, 1] }}
+      whileHover={{ translateZ: 22, rotateX: -5, rotateY: i % 2 === 0 ? 4 : -4, rotateZ: i % 2 === 0 ? 1 : -1, scale: 1.015, transition: { duration: 3.0 } }}
+      ref={light.ref}
+      {...light.handlers}
+      className="relative rounded-xl border border-border surface-3d overflow-hidden"
+      style={{
+        transformStyle: "preserve-3d",
+        boxShadow: `0 20px 50px -15px hsl(var(--${entry.color}) / 0.12), inset 0 1px 0 hsl(var(--${entry.color}) / 0.08)`,
+      }}
+    >
+      <LightFlow hovered={light.hovered} spotX={light.spotX} spotY={light.spotY} color={entry.color as "primary"|"accent"} />
+      <div className="h-0.5 w-full relative z-30" style={{ background: `linear-gradient(90deg, hsl(var(--${entry.color})), transparent)` }} />
+      <div className="p-6 border-b border-border flex flex-col sm:flex-row sm:items-start gap-4 relative z-30">
+        <motion.div
+          className="p-2.5 rounded-lg w-fit"
+          style={{ background: `hsl(var(--${entry.color}) / 0.12)`, boxShadow: `0 0 20px hsl(var(--${entry.color}) / 0.2)` }}
+          whileHover={{ rotate: [0, -10, 10, 0], transition: { duration: 4.0 } }}
+        >
+          <Icon className="w-5 h-5" style={{ color: `hsl(var(--${entry.color}))` }} />
+        </motion.div>
+        <div className="flex-1">
+          <div className="flex flex-wrap items-center gap-2 mb-1">
+            <span className="font-ui text-[11px] font-medium text-muted-foreground tracking-wide">{entry.period}</span>
+            {entry.gpa && (
+              <span className="font-ui text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full border border-primary/40 bg-primary/10 text-primary" style={{ boxShadow: "0 0 10px hsl(var(--primary)/0.2)" }}>
+                GPA {entry.gpa}
+              </span>
+            )}
+          </div>
+          <h3 className="font-display text-xl font-bold text-foreground leading-tight">{entry.degree}</h3>
+          <p className="font-ui text-sm font-semibold mt-0.5" style={{ color: `hsl(var(--${entry.color}) / 0.9)` }}>{entry.field}</p>
+          <p className="font-body text-xs text-muted-foreground mt-0.5 font-light">{entry.institution}</p>
+          {entry.honors && <p className="font-ui text-xs text-accent mt-1.5 font-medium">🏅 {entry.honors}</p>}
+        </div>
+      </div>
+      <div className="p-6 relative z-30">
+        <p className="font-ui text-[9px] font-bold tracking-[0.3em] uppercase text-muted-foreground mb-3">Key Courses</p>
+        <div className="grid sm:grid-cols-2 gap-x-8 gap-y-0">
+          {entry.courses.map((c, j) => (
+            <motion.div
+              key={j}
+              initial={{ opacity: 0, x: -10 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: 0.04 * j + 0.1 * i }}
+              whileHover={{ x: 6, transition: { duration: 1.5 } }}
+              className="flex items-center justify-between py-1.5 border-b border-border/40 last:border-0"
+            >
+              <span className="font-body text-sm text-foreground/80 font-light">{c.name}</span>
+              <span className={`font-ui text-xs font-bold ml-4 shrink-0 ${gradeColor(c.grade)}`}>{c.grade}</span>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 const EducationSection = () => {
   return (
     <section id="education" className="py-32 px-6 scene-3d">
@@ -86,85 +154,10 @@ const EducationSection = () => {
             Academic <span className="text-gradient">background</span>.
           </h2>
         </motion.div>
-
         <div className="space-y-6">
-          {education.map((entry, i) => {
-            const Icon = entry.icon;
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 40, rotateX: 10, rotateY: i % 2 === 0 ? -4 : 4 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0, rotateY: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.12 * i, ease: [0.23, 1, 0.32, 1] }}
-                whileHover={{ translateZ: 10, transition: { duration: 0.3 } }}
-                className="rounded-xl border border-border surface-3d overflow-hidden"
-                style={{
-                  transformStyle: "preserve-3d",
-                  boxShadow: `0 20px 50px -15px hsl(var(--${entry.color}) / 0.12), inset 0 1px 0 hsl(var(--${entry.color}) / 0.08)`,
-                }}
-              >
-                {/* Accent top bar */}
-                <div
-                  className="h-0.5 w-full"
-                  style={{ background: `linear-gradient(90deg, hsl(var(--${entry.color})), transparent)` }}
-                />
-
-                {/* Header */}
-                <div className="p-6 border-b border-border flex flex-col sm:flex-row sm:items-start gap-4">
-                  <motion.div
-                    className="p-2.5 rounded-lg w-fit"
-                    style={{
-                      background: `hsl(var(--${entry.color}) / 0.12)`,
-                      boxShadow: `0 0 20px hsl(var(--${entry.color}) / 0.2)`,
-                    }}
-                    whileHover={{ rotate: [0, -10, 10, 0], transition: { duration: 0.4 } }}
-                  >
-                    <Icon className="w-5 h-5" style={{ color: `hsl(var(--${entry.color}))` }} />
-                  </motion.div>
-                  <div className="flex-1">
-                    <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <span className="font-ui text-[11px] font-medium text-muted-foreground tracking-wide">{entry.period}</span>
-                      {entry.gpa && (
-                        <span
-                          className="font-ui text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full border border-primary/40 bg-primary/10 text-primary"
-                          style={{ boxShadow: "0 0 10px hsl(var(--primary)/0.2)" }}
-                        >
-                          GPA {entry.gpa}
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="font-display text-xl font-bold text-foreground leading-tight">{entry.degree}</h3>
-                    <p className="font-ui text-sm font-semibold mt-0.5" style={{ color: `hsl(var(--${entry.color}) / 0.9)` }}>{entry.field}</p>
-                    <p className="font-body text-xs text-muted-foreground mt-0.5 font-light">{entry.institution}</p>
-                    {entry.honors && (
-                      <p className="font-ui text-xs text-accent mt-1.5 font-medium">🏅 {entry.honors}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Courses */}
-                <div className="p-6">
-                  <p className="font-ui text-[9px] font-bold tracking-[0.3em] uppercase text-muted-foreground mb-3">Key Courses</p>
-                  <div className="grid sm:grid-cols-2 gap-x-8 gap-y-0">
-                    {entry.courses.map((c, j) => (
-                      <motion.div
-                        key={j}
-                        initial={{ opacity: 0, x: -10 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.3, delay: 0.04 * j + 0.1 * i }}
-                        className="flex items-center justify-between py-1.5 border-b border-border/40 last:border-0"
-                      >
-                        <span className="font-body text-sm text-foreground/80 font-light">{c.name}</span>
-                        <span className={`font-ui text-xs font-bold ml-4 shrink-0 ${gradeColor(c.grade)}`}>{c.grade}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+          {education.map((entry, i) => (
+            <EducationCard key={i} entry={entry} i={i} />
+          ))}
         </div>
       </div>
     </section>
