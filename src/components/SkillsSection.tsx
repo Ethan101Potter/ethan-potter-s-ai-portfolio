@@ -57,15 +57,32 @@ const skillCategories: { title: string; color: string; skills: Skill[] }[] = [
 ];
 
 /* ── Star row ── */
-const StarRow = ({ value, max = 5, color, delay = 0 }: {
-  value: number; max?: number; color: string; delay?: number;
+/* Vibrant palette for random star colors */
+const STAR_COLORS = [
+  "hsl(174 85% 56%)",   // teal
+  "hsl(265 72% 68%)",   // purple
+  "hsl(38 95% 55%)",    // amber
+  "hsl(340 82% 62%)",   // rose
+  "hsl(200 90% 55%)",   // sky
+  "hsl(142 70% 50%)",   // green
+  "hsl(25 95% 58%)",    // orange
+  "hsl(280 80% 65%)",   // violet
+  "hsl(60 90% 52%)",    // yellow
+  "hsl(320 75% 60%)",   // pink
+];
+const randStarColor = () => STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)];
+
+const StarRow = ({ value, max = 5, delay = 0 }: {
+  value: number; max?: number; color?: string; delay?: number;
 }) => {
   const order = Array.from({ length: max }, (_, i) => i).sort(() => Math.random() - 0.5);
+  const colors = Array.from({ length: max }, randStarColor);
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: max }).map((_, i) => {
         const fill = Math.min(1, Math.max(0, value - i));
         const rank = order.indexOf(i);
+        const c = colors[i];
         return (
           <motion.div
             key={i}
@@ -75,13 +92,11 @@ const StarRow = ({ value, max = 5, color, delay = 0 }: {
             transition={{ duration: 0.45, delay: delay + rank * 0.08, ease: [0.23, 1, 0.32, 1] }}
             style={{ width: "14px", height: "14px", position: "relative", flexShrink: 0 }}
           >
-            {/* Empty star — always visible */}
             <Star style={{ position: "absolute", top: 0, left: 0, width: "14px", height: "14px", color: "hsl(var(--border))" }} />
-            {/* Filled star — clipped from the LEFT, growing rightward */}
             {fill > 0 && (
               <Star style={{
                 position: "absolute", top: 0, left: 0, width: "14px", height: "14px",
-                color: `hsl(var(--${color}))`, fill: `hsl(var(--${color}))`,
+                color: c, fill: c,
                 clipPath: `inset(0 ${(1 - fill) * 100}% 0 0)`,
               }} />
             )}

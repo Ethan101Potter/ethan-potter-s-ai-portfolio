@@ -101,17 +101,34 @@ const reviews: Review[] = [
   },
 ];
 
+/* Vibrant palette for random star colors */
+const STAR_COLORS = [
+  "hsl(174 85% 56%)",
+  "hsl(265 72% 68%)",
+  "hsl(38 95% 55%)",
+  "hsl(340 82% 62%)",
+  "hsl(200 90% 55%)",
+  "hsl(142 70% 50%)",
+  "hsl(25 95% 58%)",
+  "hsl(280 80% 65%)",
+  "hsl(60 90% 52%)",
+  "hsl(320 75% 60%)",
+];
+const randStarColor = () => STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)];
+
 /* ── Star display ── */
-const StarDisplay = ({ value, color, delay = 0, size = "md" }: {
-  value: number; color: "primary" | "accent"; delay?: number; size?: "sm" | "md";
+const StarDisplay = ({ value, delay = 0, size = "md" }: {
+  value: number; color?: "primary" | "accent"; delay?: number; size?: "sm" | "md";
 }) => {
   const px = size === "sm" ? 12 : 14;
   const order = Array.from({ length: 5 }, (_, i) => i).sort(() => Math.random() - 0.5);
+  const colors = Array.from({ length: 5 }, randStarColor);
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => {
         const fill = Math.min(1, Math.max(0, value - i));
         const rank = order.indexOf(i);
+        const c = colors[i];
         return (
           <motion.div
             key={i}
@@ -121,13 +138,11 @@ const StarDisplay = ({ value, color, delay = 0, size = "md" }: {
             transition={{ duration: 0.45, delay: delay + rank * 0.09, ease: [0.23, 1, 0.32, 1] }}
             style={{ width: `${px}px`, height: `${px}px`, position: "relative", flexShrink: 0 }}
           >
-            {/* Empty star */}
             <Star style={{ position: "absolute", top: 0, left: 0, width: `${px}px`, height: `${px}px`, color: "hsl(var(--border))" }} />
-            {/* Filled star — clipped from the LEFT, growing rightward */}
             {fill > 0 && (
               <Star style={{
                 position: "absolute", top: 0, left: 0, width: `${px}px`, height: `${px}px`,
-                color: `hsl(var(--${color}))`, fill: `hsl(var(--${color}))`,
+                color: c, fill: c,
                 clipPath: `inset(0 ${(1 - fill) * 100}% 0 0)`,
               }} />
             )}
