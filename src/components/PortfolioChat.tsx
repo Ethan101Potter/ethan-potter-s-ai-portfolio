@@ -64,12 +64,12 @@ const KB: QA[] = [
   },
   {
     q: "Are you available for hire?",
-    a: "Yes! I'm available for:\n\n• **Remote contracts** — full-time or part-time\n• **On-site projects** in Hong Kong and internationally\n• **Consulting** on AI adoption, architecture reviews, and technical strategy\n\nThe best way to reach me is at **polishchukserhii702@gmail.com** or via the Contact form on this page.",
+    a: "Yes! I'm available for:\n\n• **Remote contracts** — full-time or part-time\n• **On-site projects** in Hong Kong and internationally\n• **Consulting** on AI adoption, architecture reviews, and technical strategy\n\nThe best way to reach me is via the **Contact form** on this page.",
     tags: ["available", "hire", "freelance", "contract", "work", "job", "opportunity", "remote"],
   },
   {
     q: "How can I contact you?",
-    a: "You can reach me at:\n\n📧 **polishchukserhii702@gmail.com**\n🐙 **github.com/polishchukserhii702-alt**\n\nOr use the **Contact** form on this page — it sends directly to me via Google Chat. I typically respond within 24 hours.",
+    a: "You can reach me via:\n\n📧 **Contact form** on this page\n🐙 **github.com/polishchukserhii702-alt**\n\nThe contact form sends directly to me. I typically respond within 24 hours.",
     tags: ["contact", "email", "reach", "message", "get in touch", "connect"],
   },
   {
@@ -79,7 +79,7 @@ const KB: QA[] = [
   },
   {
     q: "What is your hourly rate?",
-    a: "My rates vary depending on the scope and duration of the engagement. For accurate pricing, please reach out directly at **polishchukserhii702@gmail.com** with a brief description of your project — I'll get back to you within 24 hours with a tailored proposal.",
+    a: "My rates vary depending on the scope and duration of the engagement. For accurate pricing, please reach out via the **Contact form** on this page with a brief description of your project — I'll get back to you within 24 hours with a tailored proposal.",
     tags: ["rate", "price", "cost", "hourly", "fee", "charge", "budget"],
   },
   {
@@ -109,7 +109,7 @@ const findAnswer = (input: string): string => {
     }
   }
   // Fallback
-  return "I don't have a specific answer for that, but I'd love to chat! Reach me at **polishchukserhii702@gmail.com** or use the Contact form on this page. I respond within 24 hours. 😊";
+  return "I don't have a specific answer for that, but I'd love to chat! Use the **Contact form** on this page and I'll respond within 24 hours. 😊";
 };
 
 /* ── Markdown-lite renderer ── */
