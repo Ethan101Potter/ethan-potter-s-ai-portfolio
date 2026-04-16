@@ -168,4 +168,3 @@ MIT — free to use as a template. Attribution appreciated.
 
 ---
 
-*Built with ❤️ from Hong Kong 🇭🇰*
