@@ -678,7 +678,11 @@ const ProjectCard = ({ project, onOpen, isActive }: { project: Project; onOpen: 
           <motion.div className="w-full h-full"
             whileHover={{ scale: 1.04 }}
             transition={{ duration: 5.0, ease: [0.23, 1, 0.32, 1] }}>
-            <ProjectImage id={project.title} color={project.accentColor} />
+            {project.image ? (
+              <img src={project.image} alt={project.title} loading="lazy" width={800} height={512} className="w-full h-full object-cover" />
+            ) : (
+              <ProjectImage id={project.title} color={project.accentColor} />
+            )}
           </motion.div>
 
           {/* Bottom fade */}
