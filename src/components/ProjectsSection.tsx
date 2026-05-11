@@ -388,6 +388,8 @@ const fullStackProjects: Project[] = [
     ],
   },
 ];
+
+const aiProjects: Project[] = [
   {
     title: "ContextIQ",
     subtitle: "RAG Knowledge Assistant",
