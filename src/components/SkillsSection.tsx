@@ -165,12 +165,14 @@ const SkillCard = ({ cat, ci }: {
       whileHover={{ translateZ: 16, transition: { duration: 3.0 } }}
     >
       {/* Header */}
-      <div className="px-5 py-4 border-b border-border flex items-center justify-between"
+      <div className="px-4 py-4 border-b border-border flex items-center justify-between"
         style={{ background: `hsl(var(--${cat.color}) / 0.06)` }}>
         <h3 className="font-ui text-xs font-bold tracking-[0.2em] uppercase"
           style={{ color: `hsl(var(--${cat.color}))` }}>{cat.title}</h3>
-        <div className="flex gap-3 font-ui text-[9px] font-semibold tracking-wider uppercase text-muted-foreground">
-          <span>Self</span><span>Stack</span><span>Review</span>
+        <div className="flex items-center gap-3 font-ui text-[9px] font-semibold tracking-wider uppercase text-muted-foreground">
+          <span className="w-[82px] text-center">Self</span>
+          <span className="w-[80px] text-center">Stack</span>
+          <span className="w-[140px] text-right">Review</span>
         </div>
       </div>
 
@@ -213,10 +215,12 @@ const SkillCard = ({ cat, ci }: {
               </span>
 
               {/* Self stars */}
-              <StarRow value={skill.stars} color={cat.color} delay={0.04 * si} />
+              <div className="w-[82px] shrink-0 flex justify-center">
+                <StarRow value={skill.stars} color={cat.color} delay={0.04 * si} />
+              </div>
 
               {/* Stack tag */}
-              <span className="font-ui text-[9px] font-bold tracking-wide uppercase px-1.5 py-0.5 rounded border shrink-0"
+              <span className="font-ui text-[9px] font-bold tracking-wide uppercase px-1.5 py-0.5 rounded border shrink-0 w-[80px] truncate text-center"
                 style={{
                   color: `hsl(var(--${cat.color}) / 0.9)`,
                   borderColor: `hsl(var(--${cat.color}) / 0.28)`,
@@ -229,7 +233,7 @@ const SkillCard = ({ cat, ci }: {
               <div className="w-px h-4 bg-border/60 shrink-0" />
 
               {/* Review */}
-              <div className="flex items-center gap-1 shrink-0">
+              <div className="w-[140px] shrink-0 flex items-center gap-1 justify-end">
                 <StarRow value={skill.review} color={cat.color} delay={0.04 * si + 0.12} />
                 <span className="font-ui text-[10px] font-bold text-muted-foreground">{skill.review.toFixed(1)}</span>
                 <span className="font-body text-[9px] text-muted-foreground/55 font-light">({skill.reviewCount})</span>
