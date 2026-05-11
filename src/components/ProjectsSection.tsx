@@ -1,6 +1,11 @@
 ﻿import { motion, useMotionValue, useSpring, useTransform, AnimatePresence, useInView } from "framer-motion";
 import { Layers, Brain, ExternalLink, Bot, X, ArrowRight, ArrowUpRight } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import imgLnscEcommerce from "@/assets/project-lnsc-ecommerce.jpg";
+import imgSeoTool from "@/assets/project-seo-tool.jpg";
+import imgQuirklr from "@/assets/project-quirklr.jpg";
+import imgEcommerceAdmin from "@/assets/project-ecommerce-admin.jpg";
+import imgAirbnb from "@/assets/project-airbnb-bookings.jpg";
 
 /* ── Reusable human figure ─────────────────────────────────── */
 // A minimal flat-style person: head + torso + arms, seated at a desk or standing
