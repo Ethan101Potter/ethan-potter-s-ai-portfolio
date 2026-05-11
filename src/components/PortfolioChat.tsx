@@ -69,7 +69,7 @@ const KB: QA[] = [
   },
   {
     q: "How can I contact you?",
-    a: "You can reach me via:\n\n📧 **Contact form** on this page\n🐙 **github.com/polishchukserhii702-alt**\n\nThe contact form sends directly to me. I typically respond within 24 hours.",
+    a: "You can reach me via:\n\n📧 **Contact form** on this page\n🐙 **github.com/Ethan101Pottero**\n\nThe contact form sends directly to me. I typically respond within 24 hours.",
     tags: ["contact", "email", "reach", "message", "get in touch", "connect"],
   },
   {

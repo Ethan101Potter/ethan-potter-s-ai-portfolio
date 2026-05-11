@@ -150,7 +150,7 @@ const Navbar = () => {
           ))}
           <div className="flex items-center gap-3 ml-2 border-l border-border pl-4">
             <motion.a
-              href="https://github.com/polishchukserhii702-alt"
+              href="https://github.com/Ethan101Potter"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.2, rotate: 8 }}
@@ -196,7 +196,7 @@ const Navbar = () => {
           ))}
           <div className="flex items-center gap-4 pt-2 border-t border-border/50">
             <a
-              href="https://github.com/polishchukserhii702-alt"
+              href="https://github.com/Ethan101Potter"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"

@@ -229,25 +229,11 @@ const Footer = () => {
           </p>
 
           <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-end">
-            {/* README button */}
-            <motion.a
-              href="/README.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0 0 24px hsl(var(--accent)/0.35)",
-              }}
-              whileTap={{ scale: 0.96 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-border surface-3d font-ui text-xs font-semibold text-foreground hover:text-accent hover:border-accent/50 transition-colors duration-200"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              README
-            </motion.a>
+            
 
             {/* GitHub button */}
             <motion.a
-              href="https://github.com/polishchukserhii702-alt"
+              href="https://github.com/Ethan101Potter"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{
@@ -258,7 +244,7 @@ const Footer = () => {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-border surface-3d font-ui text-xs font-semibold text-foreground hover:text-primary hover:border-primary/50 transition-colors duration-200"
             >
               <Github className="w-3.5 h-3.5" />
-              polishchukserhii702-alt
+              Ethan101Potter
             </motion.a>
 
             <span className="font-ui text-xs font-medium text-muted-foreground tracking-wide hidden sm:block">
