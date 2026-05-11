@@ -490,10 +490,13 @@ const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => v
         <div className="h-1 w-full rounded-t-2xl"
           style={{ background: `linear-gradient(90deg, hsl(var(--${project.accentColor})), hsl(var(--${alt})))` }} />
 
-        {/* Hero — SVG illustration */}
+        {/* Hero — image or SVG illustration */}
         <div className="relative h-56 overflow-hidden bg-[hsl(220_22%_9%)]">
-          <ProjectImage id={project.title} color={project.accentColor} />
-
+          {project.image ? (
+            <img src={project.image} alt={project.title} loading="lazy" width={800} height={512} className="w-full h-full object-cover" />
+          ) : (
+            <ProjectImage id={project.title} color={project.accentColor} />
+          )}
           {/* Gradient fade bottom */}
           <div className="absolute inset-x-0 bottom-0 h-20 pointer-events-none"
             style={{ background: "linear-gradient(to top, hsl(220 22% 9%), transparent)" }} />
