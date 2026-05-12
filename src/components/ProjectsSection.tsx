@@ -838,9 +838,12 @@ const ProjectCategory = ({ label, icon, projects, onOpen, activeTitle }: Categor
 /* ── Section ──────────────────────────────────────────────── */
 const ALL_PROJECTS = [...fullStackProjects, ...aiProjects];
 
+type Filter = "all" | "fullstack" | "ai";
+
 const ProjectsSection = () => {
   const [active, setActive] = useState<Project | null>(null);
   const [activeIdx, setActiveIdx] = useState(0);
+  const [filter, setFilter] = useState<Filter>("all");
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: false, margin: "-100px" });
 
@@ -854,6 +857,12 @@ const ProjectsSection = () => {
 
   const activeTitle = ALL_PROJECTS[activeIdx].title;
 
+  const filters: { id: Filter; label: string; icon: React.ReactNode }[] = [
+    { id: "all", label: "All", icon: <Layers className="w-3.5 h-3.5" /> },
+    { id: "fullstack", label: "Full Stack", icon: <Layers className="w-3.5 h-3.5" /> },
+    { id: "ai", label: "Artificial Intelligence", icon: <Brain className="w-3.5 h-3.5" /> },
+  ];
+
   return (
     <>
       <section ref={sectionRef} id="projects" className="py-24 px-6 scene-3d">
@@ -863,7 +872,7 @@ const ProjectsSection = () => {
             whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-            className="mb-14"
+            className="mb-10"
           >
             <span className="font-ui text-[11px] font-semibold tracking-[0.4em] text-primary uppercase">Portfolio</span>
             <h2 className="font-display text-4xl md:text-5xl font-extrabold mt-2 text-foreground leading-none">
@@ -871,8 +880,65 @@ const ProjectsSection = () => {
             </h2>
           </motion.div>
 
-          <ProjectCategory label="Full Stack" icon={<Layers className="w-4 h-4" />} projects={fullStackProjects} onOpen={setActive} activeTitle={activeTitle} />
-          <ProjectCategory label="Artificial Intelligence" icon={<Brain className="w-4 h-4" />} projects={aiProjects} onOpen={setActive} activeTitle={activeTitle} />
+          {/* Classification filter buttons */}
+          <motion.div
+            role="tablist"
+            aria-label="Filter projects by category"
+            className="flex flex-wrap gap-2 mb-12 p-1.5 rounded-2xl border border-border bg-muted/20 backdrop-blur-sm w-fit"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.15, ease: [0.23, 1, 0.32, 1] }}
+          >
+            {filters.map(f => {
+              const isActive = filter === f.id;
+              return (
+                <button
+                  key={f.id}
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setFilter(f.id)}
+                  className="relative inline-flex items-center gap-2 px-4 py-2 rounded-xl font-ui text-xs font-bold tracking-[0.14em] uppercase transition-colors duration-200"
+                  style={{
+                    color: isActive ? "hsl(var(--primary-foreground))" : "hsl(var(--muted-foreground))",
+                  }}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="filter-pill"
+                      className="absolute inset-0 rounded-xl"
+                      style={{
+                        background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))",
+                        boxShadow: "0 8px 24px -8px hsl(var(--primary) / 0.5)",
+                      }}
+                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                    />
+                  )}
+                  <span className="relative flex items-center gap-2">
+                    {f.icon}
+                    {f.label}
+                  </span>
+                </button>
+              );
+            })}
+          </motion.div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={filter}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+            >
+              {(filter === "all" || filter === "fullstack") && (
+                <ProjectCategory label="Full Stack" icon={<Layers className="w-4 h-4" />} projects={fullStackProjects} onOpen={setActive} activeTitle={activeTitle} />
+              )}
+              {(filter === "all" || filter === "ai") && (
+                <ProjectCategory label="Artificial Intelligence" icon={<Brain className="w-4 h-4" />} projects={aiProjects} onOpen={setActive} activeTitle={activeTitle} />
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </section>
 
