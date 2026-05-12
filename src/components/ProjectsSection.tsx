@@ -930,6 +930,7 @@ const ProjectsSection = () => {
   const [active, setActive] = useState<Project | null>(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [filter, setFilter] = useState<Filter>("all");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: false, margin: "-100px" });
 
