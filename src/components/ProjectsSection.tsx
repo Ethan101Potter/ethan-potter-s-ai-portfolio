@@ -1,5 +1,5 @@
 ﻿import { motion, useMotionValue, useSpring, useTransform, AnimatePresence, useInView } from "framer-motion";
-import { Layers, Brain, ExternalLink, Bot, X, ArrowRight, ArrowUpRight } from "lucide-react";
+import { Layers, Brain, ExternalLink, Bot, X, ArrowRight, ArrowUpRight, LayoutGrid, GalleryHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import imgLnscEcommerce from "@/assets/project-lnsc-ecommerce.jpg";
 import imgSeoTool from "@/assets/project-seo-tool.jpg";
@@ -807,33 +807,119 @@ const ProjectCard = ({ project, onOpen, isActive }: { project: Project; onOpen: 
 /* ── Category block ───────────────────────────────────────── */
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } };
 
+type ViewMode = "grid" | "single";
+
 type CategoryProps = {
   label: string;
   icon: React.ReactNode;
   projects: Project[];
   onOpen: (p: Project) => void;
   activeTitle: string | null;
+  viewMode: ViewMode;
 };
 
-const ProjectCategory = ({ label, icon, projects, onOpen, activeTitle }: CategoryProps) => (
-  <div className="mb-16">
-    <motion.div className="flex items-center gap-2 mb-7"
-      initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true }} transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}>
-      <span className="text-primary">{icon}</span>
-      <h3 className="font-ui text-xs font-bold text-foreground tracking-[0.2em] uppercase">{label}</h3>
-      <div className="flex-1 h-px ml-2"
-        style={{ background: "linear-gradient(90deg, hsl(var(--primary)/0.4), transparent)" }} />
-    </motion.div>
-    <motion.div variants={container} initial="hidden" whileInView="show"
-      viewport={{ once: true }} className="grid md:grid-cols-3 gap-6"
-      style={{ perspective: 1000 }}>
-      {projects.map(p => (
-        <ProjectCard key={p.title} project={p} onOpen={onOpen} isActive={activeTitle === p.title} />
-      ))}
-    </motion.div>
-  </div>
-);
+const ProjectCategory = ({ label, icon, projects, onOpen, activeTitle, viewMode }: CategoryProps) => {
+  const [idx, setIdx] = useState(0);
+  const safeIdx = idx % projects.length;
+  const current = projects[safeIdx];
+  const go = (delta: number) => setIdx(i => (i + delta + projects.length) % projects.length);
+
+  return (
+    <div className="mb-16">
+      <motion.div className="flex items-center gap-2 mb-7"
+        initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }} transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}>
+        <span className="text-primary">{icon}</span>
+        <h3 className="font-ui text-xs font-bold text-foreground tracking-[0.2em] uppercase">{label}</h3>
+        <div className="flex-1 h-px ml-2"
+          style={{ background: "linear-gradient(90deg, hsl(var(--primary)/0.4), transparent)" }} />
+        {viewMode === "single" && (
+          <span className="font-ui text-[10px] font-bold tracking-[0.16em] text-muted-foreground tabular-nums">
+            {String(safeIdx + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+          </span>
+        )}
+      </motion.div>
+
+      {viewMode === "grid" ? (
+        <motion.div variants={container} initial="hidden" whileInView="show"
+          viewport={{ once: true }} className="grid md:grid-cols-3 gap-6"
+          style={{ perspective: 1000 }}>
+          {projects.map(p => (
+            <ProjectCard key={p.title} project={p} onOpen={onOpen} isActive={activeTitle === p.title} />
+          ))}
+        </motion.div>
+      ) : (
+        <div className="relative" style={{ perspective: 1000 }}>
+          <div className="grid md:grid-cols-[auto_1fr_auto] items-center gap-4">
+            <button
+              onClick={() => go(-1)}
+              aria-label="Previous project"
+              className="hidden md:flex w-11 h-11 rounded-full border border-border bg-muted/30 backdrop-blur-sm items-center justify-center text-foreground hover:bg-primary/15 hover:text-primary hover:border-primary/40 transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            <div className="relative min-h-[420px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={current.title}
+                  initial={{ opacity: 0, x: 40, scale: 0.97 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -40, scale: 0.97 }}
+                  transition={{ duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
+                  className="md:max-w-md md:mx-auto"
+                >
+                  <ProjectCard project={current} onOpen={onOpen} isActive={activeTitle === current.title} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <button
+              onClick={() => go(1)}
+              aria-label="Next project"
+              className="hidden md:flex w-11 h-11 rounded-full border border-border bg-muted/30 backdrop-blur-sm items-center justify-center text-foreground hover:bg-primary/15 hover:text-primary hover:border-primary/40 transition-colors"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Dots + mobile arrows */}
+          <div className="flex items-center justify-center gap-4 mt-6">
+            <button
+              onClick={() => go(-1)}
+              aria-label="Previous project"
+              className="md:hidden w-9 h-9 rounded-full border border-border bg-muted/30 flex items-center justify-center text-foreground"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <div className="flex items-center gap-2">
+              {projects.map((p, i) => (
+                <button
+                  key={p.title}
+                  onClick={() => setIdx(i)}
+                  aria-label={`Go to ${p.title}`}
+                  className="h-1.5 rounded-full transition-all duration-300"
+                  style={{
+                    width: i === safeIdx ? 28 : 8,
+                    background: i === safeIdx ? "hsl(var(--primary))" : "hsl(var(--muted-foreground) / 0.35)",
+                    boxShadow: i === safeIdx ? "0 0 12px hsl(var(--primary) / 0.5)" : "none",
+                  }}
+                />
+              ))}
+            </div>
+            <button
+              onClick={() => go(1)}
+              aria-label="Next project"
+              className="md:hidden w-9 h-9 rounded-full border border-border bg-muted/30 flex items-center justify-center text-foreground"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 /* ── Section ──────────────────────────────────────────────── */
 const ALL_PROJECTS = [...fullStackProjects, ...aiProjects];
