@@ -966,62 +966,110 @@ const ProjectsSection = () => {
             </h2>
           </motion.div>
 
-          {/* Classification filter buttons */}
-          <motion.div
-            role="tablist"
-            aria-label="Filter projects by category"
-            className="flex flex-wrap gap-2 mb-12 p-1.5 rounded-2xl border border-border bg-muted/20 backdrop-blur-sm w-fit"
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.15, ease: [0.23, 1, 0.32, 1] }}
-          >
-            {filters.map(f => {
-              const isActive = filter === f.id;
-              return (
-                <button
-                  key={f.id}
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => setFilter(f.id)}
-                  className="relative inline-flex items-center gap-2 px-4 py-2 rounded-xl font-ui text-xs font-bold tracking-[0.14em] uppercase transition-colors duration-200"
-                  style={{
-                    color: isActive ? "hsl(var(--primary-foreground))" : "hsl(var(--muted-foreground))",
-                  }}
-                >
-                  {isActive && (
-                    <motion.span
-                      layoutId="filter-pill"
-                      className="absolute inset-0 rounded-xl"
-                      style={{
-                        background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))",
-                        boxShadow: "0 8px 24px -8px hsl(var(--primary) / 0.5)",
-                      }}
-                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                    />
-                  )}
-                  <span className="relative flex items-center gap-2">
-                    {f.icon}
-                    {f.label}
-                  </span>
-                </button>
-              );
-            })}
-          </motion.div>
+          {/* Controls row: classification filter + view-mode toggle */}
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-12">
+            <motion.div
+              role="tablist"
+              aria-label="Filter projects by category"
+              className="flex flex-wrap gap-2 p-1.5 rounded-2xl border border-border bg-muted/20 backdrop-blur-sm"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.15, ease: [0.23, 1, 0.32, 1] }}
+            >
+              {filters.map(f => {
+                const isActive = filter === f.id;
+                return (
+                  <button
+                    key={f.id}
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setFilter(f.id)}
+                    className="relative inline-flex items-center gap-2 px-4 py-2 rounded-xl font-ui text-xs font-bold tracking-[0.14em] uppercase transition-colors duration-200"
+                    style={{
+                      color: isActive ? "hsl(var(--primary-foreground))" : "hsl(var(--muted-foreground))",
+                    }}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="filter-pill"
+                        className="absolute inset-0 rounded-xl"
+                        style={{
+                          background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))",
+                          boxShadow: "0 8px 24px -8px hsl(var(--primary) / 0.5)",
+                        }}
+                        transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                      />
+                    )}
+                    <span className="relative flex items-center gap-2">
+                      {f.icon}
+                      {f.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </motion.div>
+
+            {/* View mode toggle */}
+            <motion.div
+              role="tablist"
+              aria-label="Display mode"
+              className="flex gap-1 p-1.5 rounded-2xl border border-border bg-muted/20 backdrop-blur-sm"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
+            >
+              {([
+                { id: "grid", label: "Grid", icon: <LayoutGrid className="w-3.5 h-3.5" /> },
+                { id: "single", label: "One by one", icon: <GalleryHorizontal className="w-3.5 h-3.5" /> },
+              ] as { id: ViewMode; label: string; icon: React.ReactNode }[]).map(v => {
+                const isActive = viewMode === v.id;
+                return (
+                  <button
+                    key={v.id}
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setViewMode(v.id)}
+                    className="relative inline-flex items-center gap-2 px-4 py-2 rounded-xl font-ui text-xs font-bold tracking-[0.14em] uppercase transition-colors duration-200"
+                    style={{
+                      color: isActive ? "hsl(var(--primary-foreground))" : "hsl(var(--muted-foreground))",
+                    }}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="view-pill"
+                        className="absolute inset-0 rounded-xl"
+                        style={{
+                          background: "linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)))",
+                          boxShadow: "0 8px 24px -8px hsl(var(--accent) / 0.5)",
+                        }}
+                        transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                      />
+                    )}
+                    <span className="relative flex items-center gap-2">
+                      {v.icon}
+                      {v.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </motion.div>
+          </div>
 
           <AnimatePresence mode="wait">
             <motion.div
-              key={filter}
+              key={filter + viewMode}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
             >
               {(filter === "all" || filter === "fullstack") && (
-                <ProjectCategory label="Full Stack" icon={<Layers className="w-4 h-4" />} projects={fullStackProjects} onOpen={setActive} activeTitle={activeTitle} />
+                <ProjectCategory label="Full Stack" icon={<Layers className="w-4 h-4" />} projects={fullStackProjects} onOpen={setActive} activeTitle={activeTitle} viewMode={viewMode} />
               )}
               {(filter === "all" || filter === "ai") && (
-                <ProjectCategory label="Artificial Intelligence" icon={<Brain className="w-4 h-4" />} projects={aiProjects} onOpen={setActive} activeTitle={activeTitle} />
+                <ProjectCategory label="Artificial Intelligence" icon={<Brain className="w-4 h-4" />} projects={aiProjects} onOpen={setActive} activeTitle={activeTitle} viewMode={viewMode} />
               )}
             </motion.div>
           </AnimatePresence>
