@@ -1,5 +1,5 @@
 ﻿import { motion, useMotionValue, useSpring, useTransform, AnimatePresence, useInView } from "framer-motion";
-import { Layers, Brain, ExternalLink, Bot, X, ArrowRight, ArrowUpRight } from "lucide-react";
+import { Layers, Brain, ExternalLink, Bot, X, ArrowRight, ArrowUpRight, LayoutGrid, GalleryHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import imgLnscEcommerce from "@/assets/project-lnsc-ecommerce.jpg";
 import imgSeoTool from "@/assets/project-seo-tool.jpg";
@@ -807,33 +807,119 @@ const ProjectCard = ({ project, onOpen, isActive }: { project: Project; onOpen: 
 /* ── Category block ───────────────────────────────────────── */
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } };
 
+type ViewMode = "grid" | "single";
+
 type CategoryProps = {
   label: string;
   icon: React.ReactNode;
   projects: Project[];
   onOpen: (p: Project) => void;
   activeTitle: string | null;
+  viewMode: ViewMode;
 };
 
-const ProjectCategory = ({ label, icon, projects, onOpen, activeTitle }: CategoryProps) => (
-  <div className="mb-16">
-    <motion.div className="flex items-center gap-2 mb-7"
-      initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true }} transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}>
-      <span className="text-primary">{icon}</span>
-      <h3 className="font-ui text-xs font-bold text-foreground tracking-[0.2em] uppercase">{label}</h3>
-      <div className="flex-1 h-px ml-2"
-        style={{ background: "linear-gradient(90deg, hsl(var(--primary)/0.4), transparent)" }} />
-    </motion.div>
-    <motion.div variants={container} initial="hidden" whileInView="show"
-      viewport={{ once: true }} className="grid md:grid-cols-3 gap-6"
-      style={{ perspective: 1000 }}>
-      {projects.map(p => (
-        <ProjectCard key={p.title} project={p} onOpen={onOpen} isActive={activeTitle === p.title} />
-      ))}
-    </motion.div>
-  </div>
-);
+const ProjectCategory = ({ label, icon, projects, onOpen, activeTitle, viewMode }: CategoryProps) => {
+  const [idx, setIdx] = useState(0);
+  const safeIdx = idx % projects.length;
+  const current = projects[safeIdx];
+  const go = (delta: number) => setIdx(i => (i + delta + projects.length) % projects.length);
+
+  return (
+    <div className="mb-16">
+      <motion.div className="flex items-center gap-2 mb-7"
+        initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }} transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}>
+        <span className="text-primary">{icon}</span>
+        <h3 className="font-ui text-xs font-bold text-foreground tracking-[0.2em] uppercase">{label}</h3>
+        <div className="flex-1 h-px ml-2"
+          style={{ background: "linear-gradient(90deg, hsl(var(--primary)/0.4), transparent)" }} />
+        {viewMode === "single" && (
+          <span className="font-ui text-[10px] font-bold tracking-[0.16em] text-muted-foreground tabular-nums">
+            {String(safeIdx + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+          </span>
+        )}
+      </motion.div>
+
+      {viewMode === "grid" ? (
+        <motion.div variants={container} initial="hidden" whileInView="show"
+          viewport={{ once: true }} className="grid md:grid-cols-3 gap-6"
+          style={{ perspective: 1000 }}>
+          {projects.map(p => (
+            <ProjectCard key={p.title} project={p} onOpen={onOpen} isActive={activeTitle === p.title} />
+          ))}
+        </motion.div>
+      ) : (
+        <div className="relative" style={{ perspective: 1000 }}>
+          <div className="grid md:grid-cols-[auto_1fr_auto] items-center gap-4">
+            <button
+              onClick={() => go(-1)}
+              aria-label="Previous project"
+              className="hidden md:flex w-11 h-11 rounded-full border border-border bg-muted/30 backdrop-blur-sm items-center justify-center text-foreground hover:bg-primary/15 hover:text-primary hover:border-primary/40 transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            <div className="relative min-h-[420px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={current.title}
+                  initial={{ opacity: 0, x: 40, scale: 0.97 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -40, scale: 0.97 }}
+                  transition={{ duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
+                  className="md:max-w-md md:mx-auto"
+                >
+                  <ProjectCard project={current} onOpen={onOpen} isActive={activeTitle === current.title} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <button
+              onClick={() => go(1)}
+              aria-label="Next project"
+              className="hidden md:flex w-11 h-11 rounded-full border border-border bg-muted/30 backdrop-blur-sm items-center justify-center text-foreground hover:bg-primary/15 hover:text-primary hover:border-primary/40 transition-colors"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Dots + mobile arrows */}
+          <div className="flex items-center justify-center gap-4 mt-6">
+            <button
+              onClick={() => go(-1)}
+              aria-label="Previous project"
+              className="md:hidden w-9 h-9 rounded-full border border-border bg-muted/30 flex items-center justify-center text-foreground"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <div className="flex items-center gap-2">
+              {projects.map((p, i) => (
+                <button
+                  key={p.title}
+                  onClick={() => setIdx(i)}
+                  aria-label={`Go to ${p.title}`}
+                  className="h-1.5 rounded-full transition-all duration-300"
+                  style={{
+                    width: i === safeIdx ? 28 : 8,
+                    background: i === safeIdx ? "hsl(var(--primary))" : "hsl(var(--muted-foreground) / 0.35)",
+                    boxShadow: i === safeIdx ? "0 0 12px hsl(var(--primary) / 0.5)" : "none",
+                  }}
+                />
+              ))}
+            </div>
+            <button
+              onClick={() => go(1)}
+              aria-label="Next project"
+              className="md:hidden w-9 h-9 rounded-full border border-border bg-muted/30 flex items-center justify-center text-foreground"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 /* ── Section ──────────────────────────────────────────────── */
 const ALL_PROJECTS = [...fullStackProjects, ...aiProjects];
@@ -844,6 +930,7 @@ const ProjectsSection = () => {
   const [active, setActive] = useState<Project | null>(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [filter, setFilter] = useState<Filter>("all");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: false, margin: "-100px" });
 
@@ -880,62 +967,110 @@ const ProjectsSection = () => {
             </h2>
           </motion.div>
 
-          {/* Classification filter buttons */}
-          <motion.div
-            role="tablist"
-            aria-label="Filter projects by category"
-            className="flex flex-wrap gap-2 mb-12 p-1.5 rounded-2xl border border-border bg-muted/20 backdrop-blur-sm w-fit"
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.15, ease: [0.23, 1, 0.32, 1] }}
-          >
-            {filters.map(f => {
-              const isActive = filter === f.id;
-              return (
-                <button
-                  key={f.id}
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => setFilter(f.id)}
-                  className="relative inline-flex items-center gap-2 px-4 py-2 rounded-xl font-ui text-xs font-bold tracking-[0.14em] uppercase transition-colors duration-200"
-                  style={{
-                    color: isActive ? "hsl(var(--primary-foreground))" : "hsl(var(--muted-foreground))",
-                  }}
-                >
-                  {isActive && (
-                    <motion.span
-                      layoutId="filter-pill"
-                      className="absolute inset-0 rounded-xl"
-                      style={{
-                        background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))",
-                        boxShadow: "0 8px 24px -8px hsl(var(--primary) / 0.5)",
-                      }}
-                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                    />
-                  )}
-                  <span className="relative flex items-center gap-2">
-                    {f.icon}
-                    {f.label}
-                  </span>
-                </button>
-              );
-            })}
-          </motion.div>
+          {/* Controls row: classification filter + view-mode toggle */}
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-12">
+            <motion.div
+              role="tablist"
+              aria-label="Filter projects by category"
+              className="flex flex-wrap gap-2 p-1.5 rounded-2xl border border-border bg-muted/20 backdrop-blur-sm"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.15, ease: [0.23, 1, 0.32, 1] }}
+            >
+              {filters.map(f => {
+                const isActive = filter === f.id;
+                return (
+                  <button
+                    key={f.id}
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setFilter(f.id)}
+                    className="relative inline-flex items-center gap-2 px-4 py-2 rounded-xl font-ui text-xs font-bold tracking-[0.14em] uppercase transition-colors duration-200"
+                    style={{
+                      color: isActive ? "hsl(var(--primary-foreground))" : "hsl(var(--muted-foreground))",
+                    }}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="filter-pill"
+                        className="absolute inset-0 rounded-xl"
+                        style={{
+                          background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))",
+                          boxShadow: "0 8px 24px -8px hsl(var(--primary) / 0.5)",
+                        }}
+                        transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                      />
+                    )}
+                    <span className="relative flex items-center gap-2">
+                      {f.icon}
+                      {f.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </motion.div>
+
+            {/* View mode toggle */}
+            <motion.div
+              role="tablist"
+              aria-label="Display mode"
+              className="flex gap-1 p-1.5 rounded-2xl border border-border bg-muted/20 backdrop-blur-sm"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
+            >
+              {([
+                { id: "grid", label: "Grid", icon: <LayoutGrid className="w-3.5 h-3.5" /> },
+                { id: "single", label: "One by one", icon: <GalleryHorizontal className="w-3.5 h-3.5" /> },
+              ] as { id: ViewMode; label: string; icon: React.ReactNode }[]).map(v => {
+                const isActive = viewMode === v.id;
+                return (
+                  <button
+                    key={v.id}
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setViewMode(v.id)}
+                    className="relative inline-flex items-center gap-2 px-4 py-2 rounded-xl font-ui text-xs font-bold tracking-[0.14em] uppercase transition-colors duration-200"
+                    style={{
+                      color: isActive ? "hsl(var(--primary-foreground))" : "hsl(var(--muted-foreground))",
+                    }}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="view-pill"
+                        className="absolute inset-0 rounded-xl"
+                        style={{
+                          background: "linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)))",
+                          boxShadow: "0 8px 24px -8px hsl(var(--accent) / 0.5)",
+                        }}
+                        transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                      />
+                    )}
+                    <span className="relative flex items-center gap-2">
+                      {v.icon}
+                      {v.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </motion.div>
+          </div>
 
           <AnimatePresence mode="wait">
             <motion.div
-              key={filter}
+              key={filter + viewMode}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
             >
               {(filter === "all" || filter === "fullstack") && (
-                <ProjectCategory label="Full Stack" icon={<Layers className="w-4 h-4" />} projects={fullStackProjects} onOpen={setActive} activeTitle={activeTitle} />
+                <ProjectCategory label="Full Stack" icon={<Layers className="w-4 h-4" />} projects={fullStackProjects} onOpen={setActive} activeTitle={activeTitle} viewMode={viewMode} />
               )}
               {(filter === "all" || filter === "ai") && (
-                <ProjectCategory label="Artificial Intelligence" icon={<Brain className="w-4 h-4" />} projects={aiProjects} onOpen={setActive} activeTitle={activeTitle} />
+                <ProjectCategory label="Artificial Intelligence" icon={<Brain className="w-4 h-4" />} projects={aiProjects} onOpen={setActive} activeTitle={activeTitle} viewMode={viewMode} />
               )}
             </motion.div>
           </AnimatePresence>
