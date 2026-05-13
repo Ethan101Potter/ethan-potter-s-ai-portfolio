@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Menu, X, Github } from "lucide-react";
+import { Menu, X, Github, LayoutGrid, GalleryHorizontal } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
+import { useViewMode } from "@/hooks/use-view-mode";
 
 const links = [
   { label: "About", href: "#about" },
