@@ -1,6 +1,7 @@
 ﻿import { motion, useMotionValue, useSpring, useTransform, AnimatePresence, useInView } from "framer-motion";
 import { Layers, Brain, ExternalLink, Bot, X, ArrowRight, ArrowUpRight, LayoutGrid, GalleryHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import { useViewMode } from "@/hooks/use-view-mode";
 import imgLnscEcommerce from "@/assets/project-lnsc-ecommerce.jpg";
 import imgSeoTool from "@/assets/project-seo-tool.jpg";
 import imgQuirklr from "@/assets/project-quirklr.jpg";
