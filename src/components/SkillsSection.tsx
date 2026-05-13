@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Star } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useViewMode } from "@/hooks/use-view-mode";
+import { SingleSlider } from "@/components/SingleSlider";
 
 type Skill = {
   name: string;
@@ -264,7 +266,9 @@ const TriangleConnectors = () => (
   </svg>
 );
 
-const SkillsSection = () => (
+const SkillsSection = () => {
+  const { mode } = useViewMode();
+  return (
   <section id="skills" className="py-32 px-6 scene-3d">
     <div className="max-w-6xl mx-auto">
       {/* Heading */}
@@ -279,23 +283,34 @@ const SkillsSection = () => (
         </p>
       </motion.div>
 
-      {/* Triangle layout */}
-      <div className="relative flex flex-col items-center gap-6">
-        <TriangleConnectors />
+      {mode === "single" ? (
+        <SingleSlider
+          items={skillCategories}
+          itemKey={(c, i) => `${c.title}-${i}`}
+          renderItem={(c, i) => <SkillCard cat={c} ci={i} />}
+          minHeight={500}
+          maxWidthClass="md:max-w-2xl md:mx-auto"
+        />
+      ) : (
+        /* Triangle layout */
+        <div className="relative flex flex-col items-center gap-6">
+          <TriangleConnectors />
 
-        {/* Apex — Full Stack (centered, narrower) */}
-        <div className="relative z-10 w-full max-w-xl">
-          <SkillCard cat={skillCategories[0]} ci={0} />
-        </div>
+          {/* Apex — Full Stack (centered, narrower) */}
+          <div className="relative z-10 w-full max-w-xl">
+            <SkillCard cat={skillCategories[0]} ci={0} />
+          </div>
 
-        {/* Base row — AI & ML + Tools & Practices */}
-        <div className="relative z-10 w-full grid grid-cols-1 md:grid-cols-2 gap-6">
-          <SkillCard cat={skillCategories[1]} ci={1} />
-          <SkillCard cat={skillCategories[2]} ci={2} />
+          {/* Base row — AI & ML + Tools & Practices */}
+          <div className="relative z-10 w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+            <SkillCard cat={skillCategories[1]} ci={1} />
+            <SkillCard cat={skillCategories[2]} ci={2} />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   </section>
-);
+  );
+};
 
 export default SkillsSection;
