@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { Layers, Brain } from "lucide-react";
 import { useHoverLight } from "@/hooks/use-hover-light";
 import { LightFlow } from "@/components/LightFlow";
+import { useViewMode } from "@/hooks/use-view-mode";
+import { SingleSlider } from "@/components/SingleSlider";
 
 type Role = {
   period: string;
@@ -131,6 +133,7 @@ const ExperienceCard = ({ exp, i }: { exp: Role; i: number }) => {
 };
 
 const ExperienceSection = () => {
+  const { mode } = useViewMode();
   return (
     <section id="experience" className="py-32 px-6 scene-3d" style={{ perspective: "1600px" }}>
       <div className="max-w-5xl mx-auto">
@@ -149,23 +152,33 @@ const ExperienceSection = () => {
           </p>
         </motion.div>
 
-        <div className="relative">
-          {/* Animated timeline line */}
-          <motion.div
-            className="absolute left-4 top-0 bottom-0 w-px"
-            style={{ background: "linear-gradient(to bottom, hsl(var(--primary)/0.6), hsl(var(--accent)/0.6))" }}
-            initial={{ scaleY: 0, originY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
+        {mode === "single" ? (
+          <SingleSlider
+            items={experiences}
+            itemKey={(exp, i) => `${exp.company}-${i}`}
+            renderItem={(exp, i) => <ExperienceCard exp={exp} i={i} />}
+            minHeight={340}
+            maxWidthClass="md:max-w-2xl md:mx-auto pl-0"
           />
+        ) : (
+          <div className="relative">
+            {/* Animated timeline line */}
+            <motion.div
+              className="absolute left-4 top-0 bottom-0 w-px"
+              style={{ background: "linear-gradient(to bottom, hsl(var(--primary)/0.6), hsl(var(--accent)/0.6))" }}
+              initial={{ scaleY: 0, originY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
+            />
 
-          <div className="space-y-10">
-            {experiences.map((exp, i) => (
-              <ExperienceCard key={i} exp={exp} i={i} />
-            ))}
+            <div className="space-y-10">
+              {experiences.map((exp, i) => (
+                <ExperienceCard key={i} exp={exp} i={i} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

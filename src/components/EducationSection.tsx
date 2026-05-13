@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { GraduationCap, BookOpen, Award } from "lucide-react";
 import { useHoverLight } from "@/hooks/use-hover-light";
 import { LightFlow } from "@/components/LightFlow";
+import { useViewMode } from "@/hooks/use-view-mode";
+import { SingleSlider } from "@/components/SingleSlider";
 
 type Course = { name: string; grade: string };
 type EducationEntry = {
@@ -140,6 +142,7 @@ const EducationCard = ({ entry, i }: { entry: EducationEntry; i: number }) => {
 };
 
 const EducationSection = () => {
+  const { mode } = useViewMode();
   return (
     <section id="education" className="py-32 px-6 scene-3d">
       <div className="max-w-5xl mx-auto">
@@ -154,11 +157,20 @@ const EducationSection = () => {
             Academic <span className="text-gradient">background</span>.
           </h2>
         </motion.div>
-        <div className="space-y-6">
-          {education.map((entry, i) => (
-            <EducationCard key={i} entry={entry} i={i} />
-          ))}
-        </div>
+        {mode === "single" ? (
+          <SingleSlider
+            items={education}
+            itemKey={(e, i) => `${e.field}-${i}`}
+            renderItem={(e, i) => <EducationCard entry={e} i={i} />}
+            minHeight={420}
+          />
+        ) : (
+          <div className="space-y-6">
+            {education.map((entry, i) => (
+              <EducationCard key={i} entry={entry} i={i} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

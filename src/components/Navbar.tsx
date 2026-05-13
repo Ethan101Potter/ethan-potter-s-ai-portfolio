@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Menu, X, Github } from "lucide-react";
+import { Menu, X, Github, LayoutGrid, GalleryHorizontal } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
+import { useViewMode } from "@/hooks/use-view-mode";
 
 const links = [
   { label: "About", href: "#about" },
@@ -97,6 +98,41 @@ const ThemeToggle = ({ theme, toggle }: { theme: string; toggle: () => void }) =
   );
 };
 
+/* ── View mode toggle (Grid ↔ One-by-one) ── */
+const ViewModeToggle = () => {
+  const { mode, toggle } = useViewMode();
+  const isSingle = mode === "single";
+  return (
+    <motion.button
+      onClick={toggle}
+      aria-label={`Switch to ${isSingle ? "grid" : "one-by-one"} view`}
+      title={isSingle ? "One-by-one view" : "Grid view"}
+      whileTap={{ scale: 0.92 }}
+      whileHover={{ scale: 1.06 }}
+      className="relative flex items-center justify-center rounded-full border transition-colors duration-300"
+      style={{
+        width: 32,
+        height: 26,
+        borderColor: "hsl(var(--primary) / 0.4)",
+        background: "hsl(var(--primary) / 0.08)",
+        boxShadow: "0 0 12px hsl(var(--primary) / 0.18), inset 0 1px 0 hsl(255 100% 100% / 0.05)",
+      }}
+    >
+      <motion.div
+        key={mode}
+        initial={{ opacity: 0, rotate: -45, scale: 0.6 }}
+        animate={{ opacity: 1, rotate: 0, scale: 1 }}
+        transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+        className="text-primary"
+      >
+        {isSingle
+          ? <GalleryHorizontal className="w-3.5 h-3.5" />
+          : <LayoutGrid className="w-3.5 h-3.5" />}
+      </motion.div>
+    </motion.button>
+  );
+};
+
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -158,6 +194,7 @@ const Navbar = () => {
             >
               <Github className="w-4 h-4" />
             </motion.a>
+            <ViewModeToggle />
             <ThemeToggle theme={theme} toggle={toggle} />
           </div>
         </div>
@@ -203,6 +240,7 @@ const Navbar = () => {
             >
               <Github className="w-4 h-4" />
             </a>
+            <ViewModeToggle />
             <ThemeToggle theme={theme} toggle={toggle} />
           </div>
         </motion.div>
