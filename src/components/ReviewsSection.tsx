@@ -3,6 +3,8 @@ import { Star, Quote, X, ChevronDown } from "lucide-react";
 import { useRef, useState } from "react";
 import { useHoverLight } from "@/hooks/use-hover-light";
 import { LightFlow } from "@/components/LightFlow";
+import { useViewMode } from "@/hooks/use-view-mode";
+import { SingleSlider } from "@/components/SingleSlider";
 
 type Review = {
   name: string;
@@ -326,6 +328,7 @@ const avgRating = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).t
 const ReviewsSection = () => {
   const [active, setActive] = useState<Review | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const { mode } = useViewMode();
 
   return (
     <>
@@ -355,13 +358,25 @@ const ReviewsSection = () => {
           </motion.div>
         </div>
 
-        <div className="relative mb-12">
-          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none"
-            style={{ background: "linear-gradient(90deg, hsl(var(--background)), transparent)" }} />
-          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none"
-            style={{ background: "linear-gradient(270deg, hsl(var(--background)), transparent)" }} />
-          <MarqueeStrip onOpen={setActive} />
-        </div>
+        {mode === "single" ? (
+          <div className="max-w-2xl mx-auto px-6 mb-12">
+            <SingleSlider
+              items={reviews}
+              itemKey={(r, i) => `${r.name}-${i}`}
+              renderItem={(r, i) => <ReviewCard review={r} index={i} onOpen={setActive} />}
+              minHeight={360}
+              maxWidthClass=""
+            />
+          </div>
+        ) : (
+          <div className="relative mb-12">
+            <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none"
+              style={{ background: "linear-gradient(90deg, hsl(var(--background)), transparent)" }} />
+            <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none"
+              style={{ background: "linear-gradient(270deg, hsl(var(--background)), transparent)" }} />
+            <MarqueeStrip onOpen={setActive} />
+          </div>
+        )}
 
         <motion.div className="flex justify-center mt-12 px-6"
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
