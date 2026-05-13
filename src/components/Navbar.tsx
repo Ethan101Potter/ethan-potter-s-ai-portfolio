@@ -194,6 +194,7 @@ const Navbar = () => {
             >
               <Github className="w-4 h-4" />
             </motion.a>
+            <ViewModeToggle />
             <ThemeToggle theme={theme} toggle={toggle} />
           </div>
         </div>
@@ -239,6 +240,7 @@ const Navbar = () => {
             >
               <Github className="w-4 h-4" />
             </a>
+            <ViewModeToggle />
             <ThemeToggle theme={theme} toggle={toggle} />
           </div>
         </motion.div>
