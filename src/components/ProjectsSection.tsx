@@ -1086,11 +1086,27 @@ const ProjectsSection = () => {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
             >
-              {(filter === "all" || filter === "fullstack") && (
-                <ProjectCategory label="Full Stack" icon={<Layers className="w-4 h-4" />} projects={fullStackProjects} onOpen={setActive} activeTitle={activeTitle} viewMode={viewMode} />
-              )}
-              {(filter === "all" || filter === "ai") && (
-                <ProjectCategory label="Artificial Intelligence" icon={<Brain className="w-4 h-4" />} projects={aiProjects} onOpen={setActive} activeTitle={activeTitle} viewMode={viewMode} />
+              {viewMode === "single" && filter === "all" ? (
+                <div className="mb-16">
+                  <motion.div className="flex items-center gap-2 mb-7"
+                    initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }} transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}>
+                    <span className="text-primary"><Layers className="w-4 h-4" /></span>
+                    <h3 className="font-ui text-xs font-bold text-foreground tracking-[0.2em] uppercase">All Projects</h3>
+                    <div className="flex-1 h-px ml-2"
+                      style={{ background: "linear-gradient(90deg, hsl(var(--primary)/0.4), transparent)" }} />
+                  </motion.div>
+                  <SingleCarousel projects={ALL_PROJECTS} onOpen={setActive} activeTitle={activeTitle} />
+                </div>
+              ) : (
+                <>
+                  {(filter === "all" || filter === "fullstack") && (
+                    <ProjectCategory label="Full Stack" icon={<Layers className="w-4 h-4" />} projects={fullStackProjects} onOpen={setActive} activeTitle={activeTitle} viewMode={viewMode} />
+                  )}
+                  {(filter === "all" || filter === "ai") && (
+                    <ProjectCategory label="Artificial Intelligence" icon={<Brain className="w-4 h-4" />} projects={aiProjects} onOpen={setActive} activeTitle={activeTitle} viewMode={viewMode} />
+                  )}
+                </>
               )}
             </motion.div>
           </AnimatePresence>
