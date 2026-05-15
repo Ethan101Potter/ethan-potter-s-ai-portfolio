@@ -12,6 +12,17 @@ import imgArenaAI from "@/assets/project-arena-ai.jpg";
 import imgKromatic from "@/assets/project-kromatic.jpg";
 import imgDrugX from "@/assets/project-drugx.jpg";
 import imgAiDevs from "@/assets/project-aidevs.jpg";
+import imgAudiomatrix from "@/assets/project-audiomatrix.jpg";
+import imgFullstackEcom from "@/assets/project-fullstack-ecommerce.jpg";
+import imgMathCourse from "@/assets/project-math-course.jpg";
+import imgHimalayan from "@/assets/project-himalayan-connect.jpg";
+import imgAgentPortal from "@/assets/project-agent-portal.jpg";
+import imgSnuzz from "@/assets/project-snuzz-pro.jpg";
+import imgClothes from "@/assets/project-clothes-store.jpg";
+import imgAudiophile from "@/assets/project-audiophile.jpg";
+import imgTeamChat from "@/assets/project-team-chat.jpg";
+import imgUniLibrary from "@/assets/project-university-library.jpg";
+import imgTalecrafter from "@/assets/project-talecrafter.jpg";
 
 /* ── Reusable human figure ─────────────────────────────────── */
 // A minimal flat-style person: head + torso + arms, seated at a desk or standing
