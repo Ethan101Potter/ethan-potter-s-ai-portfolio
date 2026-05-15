@@ -406,6 +406,7 @@ const fullStackProjects: Project[] = [
   },
   {
     title: "AudioMatrix",
+    image: imgAudiomatrix,
     subtitle: "Audio Streaming Platform",
     description: "Full-stack audio streaming platform with playlists, library management, and a polished player UI.",
     detail: [
@@ -429,6 +430,7 @@ const fullStackProjects: Project[] = [
   },
   {
     title: "Full Stack E-Commerce",
+    image: imgFullstackEcom,
     subtitle: "Storefront & Checkout",
     description: "End-to-end e-commerce app with product catalog, cart, checkout, and user accounts.",
     detail: [
@@ -452,6 +454,7 @@ const fullStackProjects: Project[] = [
   },
   {
     title: "Math Course Platform",
+    image: imgMathCourse,
     subtitle: "Online Learning",
     description: "Next.js-powered math course platform with structured lessons, interactive content, and clean navigation.",
     detail: [
@@ -475,6 +478,7 @@ const fullStackProjects: Project[] = [
   },
   {
     title: "Himalayan Connect",
+    image: imgHimalayan,
     subtitle: "Community Platform",
     description: "Community-focused platform connecting Himalayan diaspora with events, listings, and resources.",
     detail: [
@@ -498,6 +502,7 @@ const fullStackProjects: Project[] = [
   },
   {
     title: "Agent Portal",
+    image: imgAgentPortal,
     subtitle: "Agent Dashboard",
     description: "Internal portal for agents with authentication, dashboards, and workflow management.",
     detail: [
@@ -521,6 +526,7 @@ const fullStackProjects: Project[] = [
   },
   {
     title: "Snuzz Pro",
+    image: imgSnuzz,
     subtitle: "SaaS Web App",
     description: "Modern SaaS-style web app with marketing site, authenticated areas, and clean product UI.",
     detail: [
@@ -544,6 +550,7 @@ const fullStackProjects: Project[] = [
   },
   {
     title: "Clothes Store",
+    image: imgClothes,
     subtitle: "Fashion E-Commerce",
     description: "Fashion-focused e-commerce storefront with product browsing, cart, and a refined product UI.",
     detail: [
@@ -567,6 +574,7 @@ const fullStackProjects: Project[] = [
   },
   {
     title: "Audiophile E-Commerce",
+    image: imgAudiophile,
     subtitle: "Premium Audio Store",
     description: "Premium audio e-commerce site with product browsing, cart, and a multi-step checkout.",
     detail: [
@@ -590,6 +598,7 @@ const fullStackProjects: Project[] = [
   },
   {
     title: "Team Chat",
+    image: imgTeamChat,
     subtitle: "Realtime Messaging",
     description: "Realtime team chat app with channels, invites, and authenticated messaging.",
     detail: [
@@ -613,6 +622,7 @@ const fullStackProjects: Project[] = [
   },
   {
     title: "University Library",
+    image: imgUniLibrary,
     subtitle: "Library Management System",
     description: "University library management platform with book catalog, borrowing flow, and admin tooling.",
     detail: [
@@ -636,6 +646,7 @@ const fullStackProjects: Project[] = [
   },
   {
     title: "TaleCrafter AI",
+    image: imgTalecrafter,
     subtitle: "AI Storytelling Platform",
     description: "AI-powered storytelling platform that helps users craft, illustrate, and share interactive tales.",
     detail: [
