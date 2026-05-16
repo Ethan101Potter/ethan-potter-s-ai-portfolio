@@ -23,6 +23,10 @@ import imgAudiophile from "@/assets/project-audiophile.jpg";
 import imgTeamChat from "@/assets/project-team-chat.jpg";
 import imgUniLibrary from "@/assets/project-university-library.jpg";
 import imgTalecrafter from "@/assets/project-talecrafter.jpg";
+import imgOreeke from "@/assets/project-oreeke-ai.jpg";
+import imgAiLongText from "@/assets/project-ai-long-text.jpg";
+import imgWebOlive from "@/assets/project-web-olive.jpg";
+import imgComis from "@/assets/project-comis-ai.jpg";
 
 /* ── Reusable human figure ─────────────────────────────────── */
 // A minimal flat-style person: head + torso + arms, seated at a desk or standing
@@ -789,6 +793,102 @@ const aiProjects: Project[] = [
       { label: "Focus", value: "Prod LLM" },
       { label: "Community", value: "Active" },
       { label: "Language", value: "PL/EN" },
+    ],
+  },
+  {
+    title: "Oreeke AI",
+    image: imgOreeke,
+    subtitle: "AI Character Platform",
+    description: "Social AI platform where users create, chat with, and share AI-powered characters and personas.",
+    detail: [
+      "Oreeke AI is a social platform for creating and interacting with AI characters — users can design unique personas, engage in natural conversations, and discover characters made by the community.",
+      "Built with a modern web stack featuring real-time chat interfaces, character customization tools, and a social discovery feed.",
+      "The platform blends creative expression with conversational AI, offering an engaging space where users explore personality-driven AI interactions.",
+      "Designed for scalability with a clean component architecture and responsive mobile experience.",
+    ],
+    tags: ["AI", "Chat", "Social", "Characters"],
+    accentColor: "accent",
+    github: "https://oreeke.com/@ai",
+    demo: "https://oreeke.com/@ai",
+    demoLabel: "Visit Platform",
+    demoIcon: "ai",
+    stats: [
+      { label: "Type", value: "Social AI" },
+      { label: "Chat", value: "Real-time" },
+      { label: "Personas", value: "Custom" },
+      { label: "Platform", value: "Web" },
+    ],
+  },
+  {
+    title: "AI Long Text Flow",
+    image: imgAiLongText,
+    subtitle: "Long-Form AI Processing",
+    description: "AI-powered tool for processing, summarizing, and analyzing long-form text content with smart chunking.",
+    detail: [
+      "AI Long Text Flow tackles the challenge of processing lengthy documents by intelligently chunking, routing, and synthesizing text through AI pipelines.",
+      "Built with a modern frontend and AI orchestration backend, it handles documents that exceed typical context windows by flowing content through staged processing steps.",
+      "Features include document upload, progress tracking, multi-stage summarization, and exportable results in multiple formats.",
+      "Designed for researchers, writers, and analysts who need to extract insights from large volumes of text efficiently.",
+    ],
+    tags: ["AI", "NLP", "Text Processing", "LLM"],
+    accentColor: "primary",
+    github: "https://ai-long-text-flow.vercel.app/",
+    demo: "https://ai-long-text-flow.vercel.app/",
+    demoLabel: "Try It",
+    demoIcon: "ai",
+    stats: [
+      { label: "Input", value: "Long Text" },
+      { label: "AI", value: "Pipeline" },
+      { label: "Output", value: "Structured" },
+      { label: "Stack", value: "Next.js" },
+    ],
+  },
+  {
+    title: "Olive AI",
+    image: imgWebOlive,
+    subtitle: "AI Assistant Dashboard",
+    description: "Interactive AI assistant interface with chat, tools, and real-time AI model interactions.",
+    detail: [
+      "Olive AI is an interactive assistant dashboard that puts advanced AI capabilities at users' fingertips through an intuitive chat-first interface.",
+      "Built with Next.js and modern AI APIs, featuring real-time streaming responses, tool use, and multi-turn conversation memory.",
+      "The dashboard includes conversation history, prompt templates, and export options for sharing AI-generated insights.",
+      "Designed for productivity with a clean, distraction-free UI that keeps the focus on human-AI collaboration.",
+    ],
+    tags: ["AI", "Assistant", "Chat", "Next.js"],
+    accentColor: "accent",
+    github: "https://web-olive-one-89.vercel.app/",
+    demo: "https://web-olive-one-89.vercel.app/",
+    demoLabel: "Open App",
+    demoIcon: "ai",
+    stats: [
+      { label: "Type", value: "Assistant" },
+      { label: "Chat", value: "Streaming" },
+      { label: "Tools", value: "Enabled" },
+      { label: "Stack", value: "Next.js" },
+    ],
+  },
+  {
+    title: "Comis AI",
+    image: imgComis,
+    subtitle: "AI Comedy Platform",
+    description: "AI-powered comedy and entertainment platform generating humorous content, memes, and interactive jokes.",
+    detail: [
+      "Comis AI is an entertainment platform that leverages large language models to generate comedy content — from witty one-liners to full humorous narratives.",
+      "Built with a playful, colorful interface that matches the lighthearted nature of the content, with shareable outputs and community features.",
+      "Features include AI joke generation, meme creation tools, comedic story building, and a trending feed of community-created laughs.",
+      "Designed to showcase the creative and entertaining side of AI, proving that artificial intelligence can have a sense of humor.",
+    ],
+    tags: ["AI", "Entertainment", "Comedy", "Creative"],
+    accentColor: "primary",
+    github: "https://comis.ai/",
+    demo: "https://comis.ai/",
+    demoLabel: "Get Laughs",
+    demoIcon: "ai",
+    stats: [
+      { label: "Type", value: "Entertainment" },
+      { label: "AI", value: "Creative" },
+      { label: "Content", value: "Humor" },
+      { label: "Share", value: "Social" },
     ],
   },
 ];
